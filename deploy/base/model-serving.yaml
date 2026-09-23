@@ -1,0 +1,62 @@
+{
+  "apiVersion": "serving.kserve.io/v1beta1",
+  "kind": "InferenceService",
+  "metadata": {
+    "name": "command-helper",
+    "labels": {
+      "opendatahub.io/dashboard": "true"
+    },
+    "annotations": {
+      "serving.kserve.io/deploymentMode": "Standard",
+      "serving.kserve.io/autoscalerClass": "external",
+      "openshift.io/display-name": "Command helper \u2014 Qwen2.5 Coder 7B AWQ",
+      "security.opendatahub.io/enable-auth": "false"
+    }
+  },
+  "spec": {
+    "predictor": {
+      "serviceAccountName": "model-server",
+      "automountServiceAccountToken": false,
+      "minReplicas": 1,
+      "maxReplicas": 1,
+      "deploymentStrategy": {
+        "type": "Recreate"
+      },
+      "securityContext": {
+        "runAsNonRoot": true
+      },
+      "model": {
+        "modelFormat": {
+          "name": "vLLM"
+        },
+        "runtime": "lab-vllm",
+        "storageUri": "pvc://model-cache/qwen-coder-7b",
+        "resources": {
+          "requests": {
+            "cpu": "2",
+            "memory": "12Gi",
+            "nvidia.com/gpu": "1"
+          },
+          "limits": {
+            "cpu": "4",
+            "memory": "20Gi",
+            "nvidia.com/gpu": "1"
+          }
+        }
+      },
+      "volumes": [
+        {
+          "name": "shm",
+          "emptyDir": {
+            "medium": "Memory",
+            "sizeLimit": "1Gi"
+          }
+        },
+        {
+          "name": "no-api-credentials",
+          "emptyDir": {}
+        }
+      ]
+    }
+  }
+}

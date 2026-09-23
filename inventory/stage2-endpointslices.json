@@ -1,0 +1,820 @@
+{
+  "apiVersion": "v1",
+  "items": [
+    {
+      "addressType": "IPv4",
+      "apiVersion": "discovery.k8s.io/v1",
+      "endpoints": [
+        {
+          "addresses": [
+            "10.128.0.79"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-02",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "dashboard-redirect-5b86946ccd-x5pn4",
+            "namespace": "redhat-ods-applications",
+            "uid": "790108ba-738d-4a8e-a8db-88d0a3401a72"
+          }
+        },
+        {
+          "addresses": [
+            "10.130.0.130"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-01",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "dashboard-redirect-5b86946ccd-k6t7r",
+            "namespace": "redhat-ods-applications",
+            "uid": "09515bd8-81ff-42fa-bfbb-3419a9191851"
+          }
+        }
+      ],
+      "kind": "EndpointSlice",
+      "metadata": {
+        "annotations": {
+          "endpoints.kubernetes.io/last-change-trigger-time": "2026-09-22T14:49:01Z"
+        },
+        "creationTimestamp": "2026-09-22T14:48:50Z",
+        "generateName": "dashboard-redirect-",
+        "generation": 3,
+        "labels": {
+          "app": "dashboard-redirect",
+          "app.kubernetes.io/part-of": "gatewayconfig",
+          "endpointslice.kubernetes.io/managed-by": "endpointslice-controller.k8s.io",
+          "kubernetes.io/service-name": "dashboard-redirect",
+          "platform.opendatahub.io/part-of": "gatewayconfig"
+        },
+        "name": "dashboard-redirect-bcnfp",
+        "namespace": "redhat-ods-applications",
+        "ownerReferences": [
+          {
+            "apiVersion": "v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Service",
+            "name": "dashboard-redirect",
+            "uid": "101fda4d-ea77-4034-a9b8-384d54978d74"
+          }
+        ],
+        "resourceVersion": "2757922",
+        "uid": "e0b62821-6bfb-48a6-b183-d16487ed937b"
+      },
+      "ports": [
+        {
+          "name": "http",
+          "port": 8080,
+          "protocol": "TCP"
+        }
+      ]
+    },
+    {
+      "addressType": "IPv4",
+      "apiVersion": "discovery.k8s.io/v1",
+      "endpoints": [
+        {
+          "addresses": [
+            "10.130.0.136"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-01",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "kserve-controller-manager-5fb8c45c67-wb87w",
+            "namespace": "redhat-ods-applications",
+            "uid": "07203285-54f7-406c-aa39-77f620595717"
+          }
+        }
+      ],
+      "kind": "EndpointSlice",
+      "metadata": {
+        "annotations": {
+          "endpoints.kubernetes.io/last-change-trigger-time": "2026-09-22T14:50:34Z"
+        },
+        "creationTimestamp": "2026-09-22T14:49:57Z",
+        "generateName": "kserve-controller-manager-metrics-service-",
+        "generation": 3,
+        "labels": {
+          "app.kubernetes.io/component": "kserve",
+          "app.kubernetes.io/name": "kserve",
+          "control-plane": "kserve-controller-manager",
+          "controller-tools.k8s.io": "1.0",
+          "endpointslice.kubernetes.io/managed-by": "endpointslice-controller.k8s.io",
+          "kubernetes.io/service-name": "kserve-controller-manager-metrics-service",
+          "platform.opendatahub.io/part-of": "kserve"
+        },
+        "name": "kserve-controller-manager-metrics-service-4kgs4",
+        "namespace": "redhat-ods-applications",
+        "ownerReferences": [
+          {
+            "apiVersion": "v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Service",
+            "name": "kserve-controller-manager-metrics-service",
+            "uid": "170f8288-c9aa-4e06-8b76-f9d1c41acbca"
+          }
+        ],
+        "resourceVersion": "2759862",
+        "uid": "0cf996c2-0631-4fb2-8692-7208d4a42a64"
+      },
+      "ports": null
+    },
+    {
+      "addressType": "IPv4",
+      "apiVersion": "discovery.k8s.io/v1",
+      "endpoints": [
+        {
+          "addresses": [
+            "10.130.0.136"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-01",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "kserve-controller-manager-5fb8c45c67-wb87w",
+            "namespace": "redhat-ods-applications",
+            "uid": "07203285-54f7-406c-aa39-77f620595717"
+          }
+        }
+      ],
+      "kind": "EndpointSlice",
+      "metadata": {
+        "annotations": {
+          "endpoints.kubernetes.io/last-change-trigger-time": "2026-09-22T14:50:34Z"
+        },
+        "creationTimestamp": "2026-09-22T14:49:57Z",
+        "generateName": "kserve-controller-manager-service-",
+        "generation": 3,
+        "labels": {
+          "app.kubernetes.io/component": "kserve",
+          "app.kubernetes.io/name": "kserve",
+          "control-plane": "kserve-controller-manager",
+          "controller-tools.k8s.io": "1.0",
+          "endpointslice.kubernetes.io/managed-by": "endpointslice-controller.k8s.io",
+          "kubernetes.io/service-name": "kserve-controller-manager-service",
+          "platform.opendatahub.io/part-of": "kserve"
+        },
+        "name": "kserve-controller-manager-service-wmgld",
+        "namespace": "redhat-ods-applications",
+        "ownerReferences": [
+          {
+            "apiVersion": "v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Service",
+            "name": "kserve-controller-manager-service",
+            "uid": "9dc34b52-527d-4f28-82bf-ec7c3a210f76"
+          }
+        ],
+        "resourceVersion": "2759866",
+        "uid": "52082a8a-3658-46bf-8771-37d7793b6fd5"
+      },
+      "ports": null
+    },
+    {
+      "addressType": "IPv4",
+      "apiVersion": "discovery.k8s.io/v1",
+      "endpoints": [
+        {
+          "addresses": [
+            "10.130.0.136"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-01",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "kserve-controller-manager-5fb8c45c67-wb87w",
+            "namespace": "redhat-ods-applications",
+            "uid": "07203285-54f7-406c-aa39-77f620595717"
+          }
+        }
+      ],
+      "kind": "EndpointSlice",
+      "metadata": {
+        "annotations": {
+          "endpoints.kubernetes.io/last-change-trigger-time": "2026-09-22T14:50:34Z"
+        },
+        "creationTimestamp": "2026-09-22T14:49:57Z",
+        "generateName": "kserve-webhook-server-service-",
+        "generation": 3,
+        "labels": {
+          "app.kubernetes.io/component": "kserve",
+          "app.kubernetes.io/name": "kserve",
+          "endpointslice.kubernetes.io/managed-by": "endpointslice-controller.k8s.io",
+          "kubernetes.io/service-name": "kserve-webhook-server-service",
+          "platform.opendatahub.io/part-of": "kserve"
+        },
+        "name": "kserve-webhook-server-service-clzz2",
+        "namespace": "redhat-ods-applications",
+        "ownerReferences": [
+          {
+            "apiVersion": "v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Service",
+            "name": "kserve-webhook-server-service",
+            "uid": "0d4bfb9c-56b4-4b83-9423-00eb2a8441dd"
+          }
+        ],
+        "resourceVersion": "2759864",
+        "uid": "caf70460-878c-44c1-ad5f-de79d5186973"
+      },
+      "ports": [
+        {
+          "name": "",
+          "port": 9443,
+          "protocol": "TCP"
+        }
+      ]
+    },
+    {
+      "addressType": "IPv4",
+      "apiVersion": "discovery.k8s.io/v1",
+      "endpoints": [
+        {
+          "addresses": [
+            "10.130.0.137"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-01",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "llmisvc-controller-manager-775d9b7bf7-xk267",
+            "namespace": "redhat-ods-applications",
+            "uid": "4098cdf6-c987-4370-a58f-8ccc34f6f351"
+          }
+        }
+      ],
+      "kind": "EndpointSlice",
+      "metadata": {
+        "annotations": {
+          "endpoints.kubernetes.io/last-change-trigger-time": "2026-09-22T14:50:34Z"
+        },
+        "creationTimestamp": "2026-09-22T14:49:57Z",
+        "generateName": "llmisvc-controller-manager-service-",
+        "generation": 3,
+        "labels": {
+          "app.kubernetes.io/component": "controller",
+          "control-plane": "llmisvc-controller-manager",
+          "controller-tools.k8s.io": "1.0",
+          "endpointslice.kubernetes.io/managed-by": "endpointslice-controller.k8s.io",
+          "kubernetes.io/service-name": "llmisvc-controller-manager-service",
+          "platform.opendatahub.io/part-of": "kserve"
+        },
+        "name": "llmisvc-controller-manager-service-q62xn",
+        "namespace": "redhat-ods-applications",
+        "ownerReferences": [
+          {
+            "apiVersion": "v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Service",
+            "name": "llmisvc-controller-manager-service",
+            "uid": "d36c72b3-93b0-4cc5-80c5-fa22059fe0a9"
+          }
+        ],
+        "resourceVersion": "2759858",
+        "uid": "4b37703b-d37b-4beb-a7bc-68f58b5b1cdf"
+      },
+      "ports": [
+        {
+          "name": "https",
+          "port": 8443,
+          "protocol": "TCP"
+        }
+      ]
+    },
+    {
+      "addressType": "IPv4",
+      "apiVersion": "discovery.k8s.io/v1",
+      "endpoints": [
+        {
+          "addresses": [
+            "10.130.0.137"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-01",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "llmisvc-controller-manager-775d9b7bf7-xk267",
+            "namespace": "redhat-ods-applications",
+            "uid": "4098cdf6-c987-4370-a58f-8ccc34f6f351"
+          }
+        }
+      ],
+      "kind": "EndpointSlice",
+      "metadata": {
+        "annotations": {
+          "endpoints.kubernetes.io/last-change-trigger-time": "2026-09-22T14:50:34Z"
+        },
+        "creationTimestamp": "2026-09-22T14:49:57Z",
+        "generateName": "llmisvc-webhook-server-service-",
+        "generation": 3,
+        "labels": {
+          "endpointslice.kubernetes.io/managed-by": "endpointslice-controller.k8s.io",
+          "kubernetes.io/service-name": "llmisvc-webhook-server-service",
+          "platform.opendatahub.io/part-of": "kserve"
+        },
+        "name": "llmisvc-webhook-server-service-r2lht",
+        "namespace": "redhat-ods-applications",
+        "ownerReferences": [
+          {
+            "apiVersion": "v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Service",
+            "name": "llmisvc-webhook-server-service",
+            "uid": "acf54bb6-3621-42f6-bf6e-cb5263c635b5"
+          }
+        ],
+        "resourceVersion": "2759855",
+        "uid": "bd511e1b-b67c-412f-ab63-2b945589f7fb"
+      },
+      "ports": [
+        {
+          "name": "https",
+          "port": 9443,
+          "protocol": "TCP"
+        }
+      ]
+    },
+    {
+      "addressType": "IPv4",
+      "apiVersion": "discovery.k8s.io/v1",
+      "endpoints": [
+        {
+          "addresses": [
+            "10.128.0.80"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-02",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "model-serving-api-c86d8cb99-6f7q2",
+            "namespace": "redhat-ods-applications",
+            "uid": "665cd143-12cd-4ee4-a764-a188fe035634"
+          }
+        }
+      ],
+      "kind": "EndpointSlice",
+      "metadata": {
+        "annotations": {
+          "endpoints.kubernetes.io/last-change-trigger-time": "2026-09-22T14:50:14Z"
+        },
+        "creationTimestamp": "2026-09-22T14:49:58Z",
+        "generateName": "model-serving-api-",
+        "generation": 3,
+        "labels": {
+          "app.kubernetes.io/component": "server",
+          "app.kubernetes.io/name": "model-serving-api",
+          "app.kubernetes.io/part-of": "odh-model-controller",
+          "endpointslice.kubernetes.io/managed-by": "endpointslice-controller.k8s.io",
+          "kubernetes.io/service-name": "model-serving-api",
+          "platform.opendatahub.io/part-of": "kserve"
+        },
+        "name": "model-serving-api-rbgcw",
+        "namespace": "redhat-ods-applications",
+        "ownerReferences": [
+          {
+            "apiVersion": "v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Service",
+            "name": "model-serving-api",
+            "uid": "916cac53-9c5c-42ac-924b-2befdac1bad4"
+          }
+        ],
+        "resourceVersion": "2759516",
+        "uid": "3f1d7337-6d01-4a29-a3b1-a69f98b5c616"
+      },
+      "ports": [
+        {
+          "name": "metrics",
+          "port": 8080,
+          "protocol": "TCP"
+        },
+        {
+          "name": "https",
+          "port": 8443,
+          "protocol": "TCP"
+        }
+      ]
+    },
+    {
+      "addressType": "IPv4",
+      "apiVersion": "discovery.k8s.io/v1",
+      "endpoints": [
+        {
+          "addresses": [
+            "10.130.0.134"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-01",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "agent-ops-ui-85bcd474cd-npxnz",
+            "namespace": "redhat-ods-applications",
+            "uid": "11815a28-4892-4899-8bf4-9c33d70b4349"
+          }
+        }
+      ],
+      "kind": "EndpointSlice",
+      "metadata": {
+        "annotations": {
+          "endpoints.kubernetes.io/last-change-trigger-time": "2026-09-22T14:49:42Z"
+        },
+        "creationTimestamp": "2026-09-22T14:49:04Z",
+        "generateName": "odh-dashboard-agent-ops-ui-",
+        "generation": 3,
+        "labels": {
+          "app.kubernetes.io/component": "agent-ops",
+          "endpointslice.kubernetes.io/managed-by": "endpointslice-controller.k8s.io",
+          "kubernetes.io/service-name": "odh-dashboard-agent-ops-ui",
+          "platform.opendatahub.io/part-of": "dashboard"
+        },
+        "name": "odh-dashboard-agent-ops-ui-2fxrl",
+        "namespace": "redhat-ods-applications",
+        "ownerReferences": [
+          {
+            "apiVersion": "v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Service",
+            "name": "odh-dashboard-agent-ops-ui",
+            "uid": "0970deea-e9ef-40ce-abae-74a8e8465e02"
+          }
+        ],
+        "resourceVersion": "2758683",
+        "uid": "ed94b7ca-eba9-4116-b896-810e1b58b526"
+      },
+      "ports": [
+        {
+          "name": "agent-ops-ui",
+          "port": 8843,
+          "protocol": "TCP"
+        }
+      ]
+    },
+    {
+      "addressType": "IPv4",
+      "apiVersion": "discovery.k8s.io/v1",
+      "endpoints": [
+        {
+          "addresses": [
+            "10.130.0.132"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-01",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "gen-ai-ui-85b5548fc-m8ctc",
+            "namespace": "redhat-ods-applications",
+            "uid": "34e1f247-2873-4184-8fb2-1bd95c4fbd5e"
+          }
+        }
+      ],
+      "kind": "EndpointSlice",
+      "metadata": {
+        "annotations": {
+          "endpoints.kubernetes.io/last-change-trigger-time": "2026-09-22T14:49:42Z"
+        },
+        "creationTimestamp": "2026-09-22T14:49:02Z",
+        "generateName": "odh-dashboard-gen-ai-ui-",
+        "generation": 3,
+        "labels": {
+          "app.kubernetes.io/component": "gen-ai",
+          "endpointslice.kubernetes.io/managed-by": "endpointslice-controller.k8s.io",
+          "kubernetes.io/service-name": "odh-dashboard-gen-ai-ui",
+          "platform.opendatahub.io/part-of": "dashboard"
+        },
+        "name": "odh-dashboard-gen-ai-ui-zxcnk",
+        "namespace": "redhat-ods-applications",
+        "ownerReferences": [
+          {
+            "apiVersion": "v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Service",
+            "name": "odh-dashboard-gen-ai-ui",
+            "uid": "05fb6d9e-5488-46cb-9d65-7caa5ff75090"
+          }
+        ],
+        "resourceVersion": "2758674",
+        "uid": "d0f72d61-9de0-44f2-b69f-4a3f0ea8a8fe"
+      },
+      "ports": [
+        {
+          "name": "gen-ai-ui",
+          "port": 8143,
+          "protocol": "TCP"
+        }
+      ]
+    },
+    {
+      "addressType": "IPv4",
+      "apiVersion": "discovery.k8s.io/v1",
+      "endpoints": [
+        {
+          "addresses": [
+            "10.130.0.133"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-01",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "maas-ui-7d977c9c8c-v7j48",
+            "namespace": "redhat-ods-applications",
+            "uid": "d2a23b7a-9ec8-4b2a-b4e9-59c867b1ec5b"
+          }
+        }
+      ],
+      "kind": "EndpointSlice",
+      "metadata": {
+        "annotations": {
+          "endpoints.kubernetes.io/last-change-trigger-time": "2026-09-22T14:49:42Z"
+        },
+        "creationTimestamp": "2026-09-22T14:49:03Z",
+        "generateName": "odh-dashboard-maas-ui-",
+        "generation": 3,
+        "labels": {
+          "app.kubernetes.io/component": "maas",
+          "endpointslice.kubernetes.io/managed-by": "endpointslice-controller.k8s.io",
+          "kubernetes.io/service-name": "odh-dashboard-maas-ui",
+          "platform.opendatahub.io/part-of": "dashboard"
+        },
+        "name": "odh-dashboard-maas-ui-dgmf2",
+        "namespace": "redhat-ods-applications",
+        "ownerReferences": [
+          {
+            "apiVersion": "v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Service",
+            "name": "odh-dashboard-maas-ui",
+            "uid": "324494fd-d8fa-4e66-9a51-02de0d1b96ad"
+          }
+        ],
+        "resourceVersion": "2758662",
+        "uid": "ceebe785-d4fc-4c4e-a97f-714ee5b036ba"
+      },
+      "ports": [
+        {
+          "name": "maas-ui",
+          "port": 8243,
+          "protocol": "TCP"
+        }
+      ]
+    },
+    {
+      "addressType": "IPv4",
+      "apiVersion": "discovery.k8s.io/v1",
+      "endpoints": [
+        {
+          "addresses": [
+            "10.130.0.138"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-01",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "odh-model-controller-74b74dbfbd-s2vxh",
+            "namespace": "redhat-ods-applications",
+            "uid": "da19dec9-7638-4ecc-ac7a-4d50192e20df"
+          }
+        }
+      ],
+      "kind": "EndpointSlice",
+      "metadata": {
+        "annotations": {
+          "endpoints.kubernetes.io/last-change-trigger-time": "2026-09-22T14:50:26Z"
+        },
+        "creationTimestamp": "2026-09-22T14:49:58Z",
+        "generateName": "odh-model-controller-metrics-service-",
+        "generation": 3,
+        "labels": {
+          "control-plane": "odh-model-controller",
+          "endpointslice.kubernetes.io/managed-by": "endpointslice-controller.k8s.io",
+          "kubernetes.io/service-name": "odh-model-controller-metrics-service",
+          "platform.opendatahub.io/part-of": "kserve"
+        },
+        "name": "odh-model-controller-metrics-service-dbjfm",
+        "namespace": "redhat-ods-applications",
+        "ownerReferences": [
+          {
+            "apiVersion": "v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Service",
+            "name": "odh-model-controller-metrics-service",
+            "uid": "c485252e-7d5b-4c29-bc44-e8de6e361b48"
+          }
+        ],
+        "resourceVersion": "2759721",
+        "uid": "9f463702-7ddb-494e-8d04-8a973f40d53d"
+      },
+      "ports": [
+        {
+          "name": "http",
+          "port": 8080,
+          "protocol": "TCP"
+        }
+      ]
+    },
+    {
+      "addressType": "IPv4",
+      "apiVersion": "discovery.k8s.io/v1",
+      "endpoints": [
+        {
+          "addresses": [
+            "10.130.0.138"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-01",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "odh-model-controller-74b74dbfbd-s2vxh",
+            "namespace": "redhat-ods-applications",
+            "uid": "da19dec9-7638-4ecc-ac7a-4d50192e20df"
+          }
+        }
+      ],
+      "kind": "EndpointSlice",
+      "metadata": {
+        "annotations": {
+          "endpoints.kubernetes.io/last-change-trigger-time": "2026-09-22T14:50:26Z"
+        },
+        "creationTimestamp": "2026-09-22T14:49:58Z",
+        "generateName": "odh-model-controller-webhook-service-",
+        "generation": 3,
+        "labels": {
+          "endpointslice.kubernetes.io/managed-by": "endpointslice-controller.k8s.io",
+          "kubernetes.io/service-name": "odh-model-controller-webhook-service",
+          "platform.opendatahub.io/part-of": "kserve"
+        },
+        "name": "odh-model-controller-webhook-service-2z9j8",
+        "namespace": "redhat-ods-applications",
+        "ownerReferences": [
+          {
+            "apiVersion": "v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Service",
+            "name": "odh-model-controller-webhook-service",
+            "uid": "e67a6c2d-b9e0-434a-88f3-32baf9a600e0"
+          }
+        ],
+        "resourceVersion": "2759722",
+        "uid": "f195346f-bc06-4e80-be57-151947bec41a"
+      },
+      "ports": [
+        {
+          "name": "",
+          "port": 9443,
+          "protocol": "TCP"
+        }
+      ]
+    },
+    {
+      "addressType": "IPv4",
+      "apiVersion": "discovery.k8s.io/v1",
+      "endpoints": [
+        {
+          "addresses": [
+            "10.130.0.135"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-01",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "rhods-dashboard-b69d65cd7-t5bvs",
+            "namespace": "redhat-ods-applications",
+            "uid": "f149b218-76cd-4a4e-ae6c-6d20d957943a"
+          }
+        },
+        {
+          "addresses": [
+            "10.129.0.47"
+          ],
+          "conditions": {
+            "ready": true,
+            "serving": true,
+            "terminating": false
+          },
+          "nodeName": "eqip-cp-03",
+          "targetRef": {
+            "kind": "Pod",
+            "name": "rhods-dashboard-b69d65cd7-vqx9w",
+            "namespace": "redhat-ods-applications",
+            "uid": "3e49adcc-8156-4fbb-9729-edcb5e093b57"
+          }
+        }
+      ],
+      "kind": "EndpointSlice",
+      "metadata": {
+        "annotations": {
+          "endpoints.kubernetes.io/last-change-trigger-time": "2026-09-22T14:50:40Z"
+        },
+        "creationTimestamp": "2026-09-22T14:49:00Z",
+        "generateName": "rhods-dashboard-",
+        "generation": 13,
+        "labels": {
+          "app": "rhods-dashboard",
+          "app.kubernetes.io/part-of": "rhods-dashboard",
+          "app.opendatahub.io/rhods-dashboard": "true",
+          "endpointslice.kubernetes.io/managed-by": "endpointslice-controller.k8s.io",
+          "kubernetes.io/service-name": "rhods-dashboard",
+          "platform.opendatahub.io/part-of": "dashboard"
+        },
+        "name": "rhods-dashboard-nh76m",
+        "namespace": "redhat-ods-applications",
+        "ownerReferences": [
+          {
+            "apiVersion": "v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Service",
+            "name": "rhods-dashboard",
+            "uid": "d4d67b6a-0437-4737-980b-750dcf086d59"
+          }
+        ],
+        "resourceVersion": "2759981",
+        "uid": "4c12d7b9-689b-46b2-bac0-681c1b7589f5"
+      },
+      "ports": [
+        {
+          "name": "dashboard-ui",
+          "port": 8443,
+          "protocol": "TCP"
+        },
+        {
+          "name": "core-bff",
+          "port": 8943,
+          "protocol": "TCP"
+        }
+      ]
+    }
+  ],
+  "kind": "List",
+  "metadata": {
+    "resourceVersion": ""
+  }
+}

@@ -1,0 +1,390 @@
+{
+  "apiVersion": "datasciencecluster.opendatahub.io/v2",
+  "kind": "DataScienceCluster",
+  "metadata": {
+    "annotations": {
+      "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"datasciencecluster.opendatahub.io/v2\",\"kind\":\"DataScienceCluster\",\"metadata\":{\"annotations\":{},\"name\":\"default-dsc\"},\"spec\":{\"components\":{\"aigateway\":{\"managementState\":\"Removed\"},\"aipipelines\":{\"managementState\":\"Removed\"},\"dashboard\":{\"managementState\":\"Managed\"},\"feastoperator\":{\"managementState\":\"Removed\"},\"kserve\":{\"managementState\":\"Managed\",\"modelCache\":{\"managementState\":\"Removed\"},\"nim\":{\"managementState\":\"Removed\"},\"wva\":{\"managementState\":\"Removed\"}},\"kueue\":{\"managementState\":\"Removed\"},\"llamastackoperator\":{\"managementState\":\"Removed\"},\"mcplifecycleoperator\":{\"managementState\":\"Removed\"},\"mlflowoperator\":{\"managementState\":\"Removed\"},\"modelregistry\":{\"managementState\":\"Removed\"},\"ogx\":{\"managementState\":\"Removed\"},\"ray\":{\"managementState\":\"Removed\"},\"sparkoperator\":{\"managementState\":\"Removed\"},\"trainer\":{\"managementState\":\"Removed\"},\"trainingoperator\":{\"managementState\":\"Removed\"},\"trustyai\":{\"managementState\":\"Removed\"},\"workbenches\":{\"managementState\":\"Removed\"}}}}\n"
+    },
+    "creationTimestamp": "2026-09-22T14:48:46Z",
+    "generation": 1,
+    "name": "default-dsc",
+    "resourceVersion": "2760513",
+    "uid": "f9c29445-709f-45b8-9c7e-d82897a50f8f"
+  },
+  "spec": {
+    "components": {
+      "aigateway": {
+        "managementState": "Removed"
+      },
+      "aipipelines": {
+        "managementState": "Removed"
+      },
+      "dashboard": {
+        "managementState": "Managed"
+      },
+      "feastoperator": {
+        "managementState": "Removed"
+      },
+      "kserve": {
+        "managementState": "Managed",
+        "modelCache": {
+          "managementState": "Removed"
+        },
+        "modelsAsService": {
+          "managementState": "Removed"
+        },
+        "nim": {
+          "airGapped": false,
+          "managementState": "Removed"
+        },
+        "rawDeploymentServiceConfig": "Headless",
+        "wva": {
+          "managementState": "Removed"
+        }
+      },
+      "kueue": {
+        "autoCreateQueues": false,
+        "defaultClusterQueueName": "default",
+        "defaultLocalQueueName": "default",
+        "managementState": "Removed"
+      },
+      "llamastackoperator": {
+        "managementState": "Removed"
+      },
+      "mcplifecycleoperator": {
+        "managementState": "Removed"
+      },
+      "mlflowoperator": {
+        "managementState": "Removed"
+      },
+      "modelregistry": {
+        "managementState": "Removed",
+        "registriesNamespace": "rhoai-model-registries"
+      },
+      "ogx": {
+        "managementState": "Removed"
+      },
+      "ray": {
+        "managementState": "Removed"
+      },
+      "sparkoperator": {
+        "managementState": "Removed"
+      },
+      "trainer": {
+        "managementState": "Removed"
+      },
+      "trainingoperator": {
+        "managementState": "Removed"
+      },
+      "trustyai": {
+        "managementState": "Removed",
+        "mcpGuardrailsMode": false
+      },
+      "workbenches": {
+        "managementState": "Removed",
+        "workbenchNamespace": "rhods-notebooks"
+      }
+    }
+  },
+  "status": {
+    "components": {
+      "aigateway": {
+        "managementState": "Removed"
+      },
+      "aipipelines": {
+        "managementState": "Removed"
+      },
+      "batchGateway": {
+        "managementState": "Removed"
+      },
+      "dashboard": {
+        "managementState": "Managed"
+      },
+      "feastoperator": {
+        "managementState": "Removed"
+      },
+      "kserve": {
+        "managementState": "Managed",
+        "releases": [
+          {
+            "name": "KServe",
+            "version": "v0.19.0"
+          },
+          {
+            "name": "vLLM",
+            "version": "v0.24.0"
+          },
+          {
+            "name": "llm-d-router",
+            "version": "v0.10.0"
+          },
+          {
+            "name": "llm-d-workload-variant-autoscaler",
+            "version": "v0.9.0"
+          },
+          {
+            "name": "llm-d-latency-predictor",
+            "version": "v0.9.0"
+          },
+          {
+            "name": "OpenVINO Model Server",
+            "version": "v2025.4"
+          },
+          {
+            "name": "MLServer",
+            "version": "1.7.1"
+          },
+          {
+            "name": "Caikit",
+            "version": "v0.27.7"
+          },
+          {
+            "name": "Caikit-nlp",
+            "version": "v0.5.8"
+          },
+          {
+            "name": "AutoGluon",
+            "version": "v0.1.0"
+          },
+          {
+            "name": "Text Generation Inference Server",
+            "version": "commit 8a8c55dd0884b8e4e420d22f10bcce6752455edf"
+          },
+          {
+            "name": "platform",
+            "version": "3.5.1"
+          }
+        ]
+      },
+      "kueue": {
+        "managementState": "Removed"
+      },
+      "llamastackoperator": {},
+      "mcplifecycleoperator": {
+        "managementState": "Removed"
+      },
+      "mlflowoperator": {
+        "managementState": "Removed"
+      },
+      "modelregistry": {
+        "managementState": "Removed"
+      },
+      "modelsAsAService": {
+        "managementState": "Removed"
+      },
+      "ogx": {
+        "managementState": "Removed"
+      },
+      "ray": {
+        "managementState": "Removed"
+      },
+      "sparkoperator": {
+        "managementState": "Removed"
+      },
+      "trainer": {
+        "managementState": "Removed"
+      },
+      "trainingoperator": {
+        "managementState": "Removed"
+      },
+      "trustyai": {
+        "managementState": "Removed"
+      },
+      "workbenches": {
+        "managementState": "Removed"
+      }
+    },
+    "conditions": [
+      {
+        "lastTransitionTime": "2026-09-22T14:50:49Z",
+        "status": "True",
+        "type": "Ready"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:48:51Z",
+        "observedGeneration": 1,
+        "status": "True",
+        "type": "ProvisioningSucceeded"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:48:49Z",
+        "message": "All registered components have ManagementState Removed or are not configured",
+        "reason": "NoManagedComponents",
+        "severity": "Info",
+        "status": "True",
+        "type": "ComponentsReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:50:49Z",
+        "status": "True",
+        "type": "ModulesReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:48:49Z",
+        "message": "Module ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "AIGatewayReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:51:14Z",
+        "message": "Component ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "AIPipelinesReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:48:49Z",
+        "message": "Submodule ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "BatchGatewayReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:49:05Z",
+        "reason": "AllDependentsHealthy",
+        "status": "True",
+        "type": "DashboardReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:48:50Z",
+        "message": "Module ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "FeastOperatorReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:50:00Z",
+        "message": "Red Hat Connectivity Link not installed",
+        "reason": "PreConditionFailed",
+        "severity": "Info",
+        "status": "False",
+        "type": "KserveLLMInferenceServiceDependencies"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:50:00Z",
+        "message": "LeaderWorkerSet not installed; Red Hat Connectivity Link (Wide EP) not installed",
+        "reason": "PreConditionFailed",
+        "severity": "Info",
+        "status": "False",
+        "type": "KserveLLMInferenceServiceWideEPDependencies"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:50:49Z",
+        "status": "True",
+        "type": "KserveReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:51:14Z",
+        "message": "Component ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "KueueReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:48:51Z",
+        "message": "Module ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "MCPLifecycleOperatorReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:48:51Z",
+        "message": "Module ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "MLflowOperatorReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:51:14Z",
+        "message": "Component ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "ModelRegistryReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:48:49Z",
+        "message": "Submodule ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "ModelsAsAServiceReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:48:51Z",
+        "message": "Module ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "OGXReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:48:49Z",
+        "status": "True",
+        "type": "ProvisioningProgress"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:51:14Z",
+        "message": "Component ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "RayReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:51:14Z",
+        "message": "Component ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "SparkOperatorReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:51:14Z",
+        "message": "Component ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "TrainerReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:51:14Z",
+        "message": "Component ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "TrainingOperatorReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:51:14Z",
+        "message": "Component ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "TrustyAIReady"
+      },
+      {
+        "lastTransitionTime": "2026-09-22T14:48:51Z",
+        "message": "Module ManagementState is set to Removed",
+        "reason": "Removed",
+        "severity": "Info",
+        "status": "False",
+        "type": "WorkbenchesReady"
+      }
+    ],
+    "observedGeneration": 1,
+    "phase": "Ready",
+    "release": {
+      "name": "OpenShift AI Self-Managed",
+      "version": "3.5.1"
+    }
+  }
+}

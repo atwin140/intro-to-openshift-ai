@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  - path: worker-01.json
+  - path: worker-02.json
+images:
+  - name: nvcr.io/nvidia/k8s/cuda-sample
+    newName: nvcr.io/nvidia/k8s/cuda-sample
+    digest: sha256:86c8ab90b657bc74098f068e670d2635799f1fd3695a0dd55fd696d8f9e3d64b

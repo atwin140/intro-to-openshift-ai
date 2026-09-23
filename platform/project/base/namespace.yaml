@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: intro-openshift-ai
+  labels:
+    opendatahub.io/dashboard: 'true'
+  annotations:
+    openshift.io/display-name: Intro to OpenShift AI
+    openshift.io/description: Single-GPU chatbot lab

@@ -1,0 +1,20 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "download-model"
+  },
+  "spec": {
+    "template": {
+      "spec": {
+        "nodeSelector": {
+          "kubernetes.io/hostname": "gpu-worker-01"
+        },
+        "securityContext": {
+          "fsGroup": 1000000000,
+          "fsGroupChangePolicy": "OnRootMismatch"
+        }
+      }
+    }
+  }
+}

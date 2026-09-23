@@ -1,0 +1,4 @@
+vllm 0.24.0+rhaiv.13 torch 2.11.0a0+git069d5d8 CUDA build 13.0
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 11 files:   9%|▉         | 1/11 [00:00<00:01,  5.91it/s]Fetching 11 files:  36%|███▋      | 4/11 [00:00<00:00, 13.60it/s]Fetching 11 files:  55%|█████▍    | 6/11 [00:00<00:00, 11.65it/s]Fetching 11 files:  73%|███████▎  | 8/11 [00:00<00:00,  7.06it/s]Fetching 11 files:  82%|████████▏ | 9/11 [00:01<00:00,  6.39it/s]Fetching 11 files:  91%|█████████ | 10/11 [01:07<00:15, 15.64s/it]Fetching 11 files: 100%|██████████| 11/11 [01:41<00:00, 20.38s/it]Fetching 11 files: 100%|██████████| 11/11 [01:41<00:00,  9.25s/it]
+DOWNLOAD-VERIFIED /models/qwen-coder-7b weight_bytes 5570747392

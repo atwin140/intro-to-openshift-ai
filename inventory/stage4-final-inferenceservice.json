@@ -1,0 +1,130 @@
+{
+    "apiVersion": "serving.kserve.io/v1beta1",
+    "kind": "InferenceService",
+    "metadata": {
+        "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"serving.kserve.io/v1beta1\",\"kind\":\"InferenceService\",\"metadata\":{\"annotations\":{\"openshift.io/display-name\":\"Command helper — Qwen2.5 Coder 7B AWQ\",\"security.opendatahub.io/enable-auth\":\"false\",\"serving.kserve.io/autoscalerClass\":\"external\",\"serving.kserve.io/deploymentMode\":\"RawDeployment\"},\"labels\":{\"opendatahub.io/dashboard\":\"true\"},\"name\":\"command-helper\",\"namespace\":\"intro-openshift-ai\"},\"spec\":{\"predictor\":{\"automountServiceAccountToken\":false,\"deploymentStrategy\":{\"type\":\"Recreate\"},\"maxReplicas\":1,\"minReplicas\":1,\"model\":{\"modelFormat\":{\"name\":\"vLLM\"},\"resources\":{\"limits\":{\"cpu\":\"4\",\"memory\":\"20Gi\",\"nvidia.com/gpu\":\"1\"},\"requests\":{\"cpu\":\"2\",\"memory\":\"12Gi\",\"nvidia.com/gpu\":\"1\"}},\"runtime\":\"lab-vllm\",\"storageUri\":\"pvc://model-cache/qwen-coder-7b\"},\"nodeSelector\":{\"kubernetes.io/hostname\":\"gpu-node-01\"},\"securityContext\":{\"fsGroup\":1000880000,\"fsGroupChangePolicy\":\"OnRootMismatch\",\"runAsNonRoot\":true},\"serviceAccountName\":\"model-server\",\"volumes\":[{\"emptyDir\":{\"medium\":\"Memory\",\"sizeLimit\":\"1Gi\"},\"name\":\"shm\"},{\"emptyDir\":{},\"name\":\"no-api-credentials\"}]}}}\n",
+            "modelFormat": "vLLM",
+            "openshift.io/display-name": "Command helper — Qwen2.5 Coder 7B AWQ",
+            "security.opendatahub.io/enable-auth": "false",
+            "serving.kserve.io/autoscalerClass": "external",
+            "serving.kserve.io/deploymentMode": "Standard"
+        },
+        "creationTimestamp": "2026-09-22T16:59:02Z",
+        "finalizers": [
+            "odh.inferenceservice.finalizers",
+            "inferenceservice.finalizers"
+        ],
+        "generation": 3,
+        "labels": {
+            "opendatahub.io/dashboard": "true"
+        },
+        "name": "command-helper",
+        "namespace": "intro-openshift-ai",
+        "resourceVersion": "2866833",
+        "uid": "bed9aa15-4457-4ff2-b201-6ef1d234445d"
+    },
+    "spec": {
+        "predictor": {
+            "automountServiceAccountToken": false,
+            "deploymentStrategy": {
+                "type": "Recreate"
+            },
+            "maxReplicas": 1,
+            "minReplicas": 1,
+            "model": {
+                "modelFormat": {
+                    "name": "vLLM"
+                },
+                "name": "",
+                "protocolVersion": "v2",
+                "resources": {
+                    "limits": {
+                        "cpu": "4",
+                        "memory": "20Gi",
+                        "nvidia.com/gpu": "1"
+                    },
+                    "requests": {
+                        "cpu": "2",
+                        "memory": "12Gi",
+                        "nvidia.com/gpu": "1"
+                    }
+                },
+                "runtime": "lab-vllm",
+                "storageUri": "pvc://model-cache/qwen-coder-7b"
+            },
+            "nodeSelector": {
+                "kubernetes.io/hostname": "gpu-node-01"
+            },
+            "securityContext": {
+                "fsGroup": 1000880000,
+                "fsGroupChangePolicy": "OnRootMismatch",
+                "runAsNonRoot": true
+            },
+            "serviceAccountName": "model-server",
+            "volumes": [
+                {
+                    "emptyDir": {
+                        "medium": "Memory",
+                        "sizeLimit": "1Gi"
+                    },
+                    "name": "shm"
+                },
+                {
+                    "emptyDir": {},
+                    "name": "no-api-credentials"
+                }
+            ]
+        }
+    },
+    "status": {
+        "address": {
+            "url": "http://command-helper-predictor.intro-openshift-ai.svc.cluster.local:8080"
+        },
+        "components": {
+            "predictor": {
+                "url": "http://command-helper-predictor-intro-openshift-ai.example.com"
+            }
+        },
+        "conditions": [
+            {
+                "lastTransitionTime": "2026-09-22T16:59:02Z",
+                "status": "True",
+                "type": "IngressReady"
+            },
+            {
+                "lastTransitionTime": "2026-09-22T17:14:00Z",
+                "message": "ReplicaSet \"command-helper-predictor-6fd4467797\" has successfully progressed.",
+                "reason": "NewReplicaSetAvailable",
+                "status": "True",
+                "type": "PredictorReady"
+            },
+            {
+                "lastTransitionTime": "2026-09-22T17:14:00Z",
+                "status": "True",
+                "type": "Ready"
+            },
+            {
+                "lastTransitionTime": "2026-09-22T16:59:02Z",
+                "severity": "Info",
+                "status": "False",
+                "type": "Stopped"
+            }
+        ],
+        "deploymentMode": "Standard",
+        "modelStatus": {
+            "copies": {
+                "failedCopies": 0,
+                "totalCopies": 1
+            },
+            "states": {
+                "activeModelState": "Loaded",
+                "targetModelState": "Loaded"
+            },
+            "transitionStatus": "UpToDate"
+        },
+        "observedGeneration": 4,
+        "servingRuntimeName": "lab-vllm",
+        "url": "http://command-helper-predictor.intro-openshift-ai.svc.cluster.local"
+    }
+}

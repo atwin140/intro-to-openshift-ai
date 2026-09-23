@@ -1,0 +1,535 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "internal.serving.kserve.io/storage-initializer-sourceuri": "pvc://image-model-cache/sd15",
+                    "k8s.ovn.org/pod-networks": "{\"default\":{\"ip_addresses\":[\"10.128.2.27/23\"],\"mac_address\":\"0a:58:0a:80:02:1b\",\"gateway_ips\":[\"10.128.2.1\"],\"routes\":[{\"dest\":\"10.128.0.0/14\",\"nextHop\":\"10.128.2.1\"},{\"dest\":\"172.30.0.0/16\",\"nextHop\":\"10.128.2.1\"},{\"dest\":\"169.254.0.5/32\",\"nextHop\":\"10.128.2.1\"},{\"dest\":\"100.64.0.0/16\",\"nextHop\":\"10.128.2.1\"}],\"ip_address\":\"10.128.2.27/23\",\"gateway_ip\":\"10.128.2.1\",\"role\":\"primary\"}}",
+                    "k8s.v1.cni.cncf.io/network-status": "[{\n    \"name\": \"ovn-kubernetes\",\n    \"interface\": \"eth0\",\n    \"ips\": [\n        \"10.128.2.27\"\n    ],\n    \"mac\": \"0a:58:0a:80:02:1b\",\n    \"default\": true,\n    \"dns\": {}\n}]",
+                    "openshift.io/display-name": "Image generator — Stable Diffusion 1.5",
+                    "openshift.io/scc": "restricted-v2",
+                    "seccomp.security.alpha.kubernetes.io/pod": "runtime/default",
+                    "security.opendatahub.io/enable-auth": "true",
+                    "security.openshift.io/validated-scc-subject-type": "user",
+                    "service.beta.openshift.io/serving-cert-secret-name": "image-generator-predictor-serving-cert",
+                    "serving.kserve.io/autoscalerClass": "external",
+                    "serving.kserve.io/deploymentMode": "Standard",
+                    "serving.kserve.io/enable-metric-aggregation": "false",
+                    "serving.kserve.io/enable-prometheus-scraping": "false"
+                },
+                "creationTimestamp": "2026-09-23T04:22:09Z",
+                "generateName": "image-generator-predictor-5dd9bc9df-",
+                "generation": 1,
+                "labels": {
+                    "app": "isvc.image-generator-predictor",
+                    "component": "predictor",
+                    "networking.kserve.io/visibility": "exposed",
+                    "opendatahub.io/dashboard": "true",
+                    "pod-template-hash": "5dd9bc9df",
+                    "serving.kserve.io/inferenceservice": "image-generator"
+                },
+                "name": "image-generator-predictor-5dd9bc9df-qzzp7",
+                "namespace": "intro-openshift-ai",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "image-generator-predictor-5dd9bc9df",
+                        "uid": "3ff9b1ee-eeae-430e-9aff-6a0e5e68b77a"
+                    }
+                ],
+                "resourceVersion": "3363702",
+                "uid": "889ec7a8-4917-4121-b9b6-fa57e71a0805"
+            },
+            "spec": {
+                "automountServiceAccountToken": true,
+                "containers": [
+                    {
+                        "args": [
+                            "server:app",
+                            "--app-dir",
+                            "/opt/image-app",
+                            "--host",
+                            "0.0.0.0",
+                            "--port",
+                            "8080",
+                            "--workers",
+                            "1",
+                            "--limit-concurrency",
+                            "8"
+                        ],
+                        "command": [
+                            "python",
+                            "-m",
+                            "uvicorn"
+                        ],
+                        "env": [
+                            {
+                                "name": "HF_HOME",
+                                "value": "/tmp/hf"
+                            },
+                            {
+                                "name": "HF_HUB_OFFLINE",
+                                "value": "1"
+                            },
+                            {
+                                "name": "TRANSFORMERS_OFFLINE",
+                                "value": "1"
+                            },
+                            {
+                                "name": "DO_NOT_TRACK",
+                                "value": "1"
+                            },
+                            {
+                                "name": "INFERENCE_SERVICE_NAME",
+                                "value": "image-generator"
+                            }
+                        ],
+                        "image": "registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:c056e61672b6aea489ad5dde0bd2f8497230f5333e87f7cf6c494eba3bfdc808",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "kserve-container",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "4",
+                                "memory": "16Gi",
+                                "nvidia.com/gpu": "1"
+                            },
+                            "requests": {
+                                "cpu": "2",
+                                "memory": "8Gi",
+                                "nvidia.com/gpu": "1"
+                            }
+                        },
+                        "securityContext": {
+                            "allowPrivilegeEscalation": false,
+                            "capabilities": {
+                                "drop": [
+                                    "ALL"
+                                ]
+                            },
+                            "runAsNonRoot": true,
+                            "runAsUser": 1000880000,
+                            "seccompProfile": {
+                                "type": "RuntimeDefault"
+                            }
+                        },
+                        "startupProbe": {
+                            "failureThreshold": 90,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/dev/shm",
+                                "name": "shm"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "no-api-credentials",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/opt/image-app",
+                                "name": "image-app",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/etc/tls/private",
+                                "name": "proxy-tls"
+                            },
+                            {
+                                "mountPath": "/mnt/models",
+                                "name": "kserve-pvc-source",
+                                "readOnly": true,
+                                "subPath": "sd15"
+                            }
+                        ]
+                    },
+                    {
+                        "args": [
+                            "--secure-listen-address=:8443",
+                            "--proxy-endpoints-port=8643",
+                            "--upstream=http://localhost:8080",
+                            "--auth-header-fields-enabled=true",
+                            "--tls-cert-file=/etc/tls/private/tls.crt",
+                            "--tls-private-key-file=/etc/tls/private/tls.key",
+                            "--config-file=/etc/kube-rbac-proxy/config-file.yaml",
+                            "--v=4"
+                        ],
+                        "image": "registry.redhat.io/rhoai/odh-kube-rbac-proxy-rhel9@sha256:b64105d53ab3f7d477652b2f29c90636fe272891cce71620ceadf0bf2eb3e323",
+                        "imagePullPolicy": "IfNotPresent",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/healthz",
+                                "port": 8643,
+                                "scheme": "HTTPS"
+                            },
+                            "initialDelaySeconds": 30,
+                            "periodSeconds": 5,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "name": "kube-rbac-proxy",
+                        "ports": [
+                            {
+                                "containerPort": 8443,
+                                "name": "https",
+                                "protocol": "TCP"
+                            },
+                            {
+                                "containerPort": 8643,
+                                "name": "proxy",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/healthz",
+                                "port": 8643,
+                                "scheme": "HTTPS"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 5,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "200m",
+                                "memory": "128Mi"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "memory": "64Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "allowPrivilegeEscalation": false,
+                            "capabilities": {
+                                "drop": [
+                                    "ALL"
+                                ]
+                            },
+                            "runAsUser": 1000880000
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/etc/tls/private",
+                                "name": "proxy-tls"
+                            },
+                            {
+                                "mountPath": "/etc/kube-rbac-proxy",
+                                "name": "kube-rbac-proxy-sar-config",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-7pnpl",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "gpu-node-02",
+                "nodeSelector": {
+                    "kubernetes.io/hostname": "gpu-node-02"
+                },
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {
+                    "fsGroup": 1000880000,
+                    "fsGroupChangePolicy": "OnRootMismatch",
+                    "runAsNonRoot": true,
+                    "seLinuxOptions": {
+                        "level": "s0:c30,c5"
+                    },
+                    "seccompProfile": {
+                        "type": "RuntimeDefault"
+                    }
+                },
+                "serviceAccount": "image-generator",
+                "serviceAccountName": "image-generator",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/memory-pressure",
+                        "operator": "Exists"
+                    }
+                ],
+                "volumes": [
+                    {
+                        "emptyDir": {
+                            "medium": "Memory",
+                            "sizeLimit": "1Gi"
+                        },
+                        "name": "shm"
+                    },
+                    {
+                        "emptyDir": {},
+                        "name": "no-api-credentials"
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "image-generator-code"
+                        },
+                        "name": "image-app"
+                    },
+                    {
+                        "name": "proxy-tls",
+                        "secret": {
+                            "defaultMode": 420,
+                            "secretName": "image-generator-predictor-serving-cert"
+                        }
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "image-generator-kube-rbac-proxy-sar-config"
+                        },
+                        "name": "kube-rbac-proxy-sar-config"
+                    },
+                    {
+                        "name": "kube-api-access-7pnpl",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "service-ca.crt",
+                                                "path": "service-ca.crt"
+                                            }
+                                        ],
+                                        "name": "openshift-service-ca.crt"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "kserve-pvc-source",
+                        "persistentVolumeClaim": {
+                            "claimName": "image-model-cache"
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-23T04:22:09Z",
+                        "observedGeneration": 1,
+                        "status": "False",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-23T04:22:09Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-23T04:22:09Z",
+                        "message": "containers with unready status: [kserve-container kube-rbac-proxy]",
+                        "observedGeneration": 1,
+                        "reason": "ContainersNotReady",
+                        "status": "False",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-23T04:22:09Z",
+                        "message": "containers with unready status: [kserve-container kube-rbac-proxy]",
+                        "observedGeneration": 1,
+                        "reason": "ContainersNotReady",
+                        "status": "False",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-23T04:22:09Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "image": "registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:c056e61672b6aea489ad5dde0bd2f8497230f5333e87f7cf6c494eba3bfdc808",
+                        "imageID": "",
+                        "lastState": {},
+                        "name": "kserve-container",
+                        "ready": false,
+                        "restartCount": 0,
+                        "started": false,
+                        "state": {
+                            "waiting": {
+                                "reason": "ContainerCreating"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/dev/shm",
+                                "name": "shm"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "no-api-credentials",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/opt/image-app",
+                                "name": "image-app",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/etc/tls/private",
+                                "name": "proxy-tls"
+                            },
+                            {
+                                "mountPath": "/mnt/models",
+                                "name": "kserve-pvc-source",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    },
+                    {
+                        "image": "registry.redhat.io/rhoai/odh-kube-rbac-proxy-rhel9@sha256:b64105d53ab3f7d477652b2f29c90636fe272891cce71620ceadf0bf2eb3e323",
+                        "imageID": "",
+                        "lastState": {},
+                        "name": "kube-rbac-proxy",
+                        "ready": false,
+                        "restartCount": 0,
+                        "started": false,
+                        "state": {
+                            "waiting": {
+                                "reason": "ContainerCreating"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/etc/tls/private",
+                                "name": "proxy-tls"
+                            },
+                            {
+                                "mountPath": "/etc/kube-rbac-proxy",
+                                "name": "kube-rbac-proxy-sar-config",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-7pnpl",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.15.150",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.15.150"
+                    }
+                ],
+                "observedGeneration": 1,
+                "phase": "Pending",
+                "qosClass": "Burstable",
+                "startTime": "2026-09-23T04:22:09Z"
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

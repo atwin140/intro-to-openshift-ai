@@ -1,0 +1,160 @@
+{
+  "models": {
+    "object": "list",
+    "data": [
+      {
+        "id": "command-helper",
+        "object": "model",
+        "created": 1790097415,
+        "owned_by": "vllm",
+        "root": "/mnt/models",
+        "parent": null,
+        "max_model_len": 4096,
+        "permission": [
+          {
+            "id": "modelperm-8593dd5e4ed04f84",
+            "object": "model_permission",
+            "created": 1790097415,
+            "allow_create_engine": false,
+            "allow_sampling": true,
+            "allow_logprobs": true,
+            "allow_search_indices": false,
+            "allow_view": true,
+            "allow_fine_tuning": false,
+            "organization": "*",
+            "group": null,
+            "is_blocking": false
+          }
+        ]
+      }
+    ]
+  },
+  "results": [
+    {
+      "label": "evicted-single",
+      "seconds": 1.83,
+      "prompt": "How do I list all evicted pods?",
+      "response": {
+        "id": "chatcmpl-a2c4bda7a7b44c77",
+        "object": "chat.completion",
+        "created": 1790097415,
+        "model": "command-helper",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "To list all evicted pods across all namespaces, use the following command:\n\n```sh\nkubectl get pods --all-namespaces -o json | jq '.items[] | select(.status.reason == \"Evicted\")'\n```\n\nThis command uses `kubectl` to get all pods across all namespaces (`--all-namespaces` or `-A`) and filters the JSON output using `jq` to show only those pods where the status reason is \"Evicted\".\n\nIf you want to list evicted pods in a specific namespace, replace `--all-namespaces` with `-n <namespace-name>`:\n\n```sh\nkubectl get pods -n <namespace-name> -o json | jq '.items[] | select(.status.reason == \"Evicted\")'\n```\n\nThis will list only the evicted pods in the specified namespace.",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.24.0+rhaiv.13-43922ef2",
+        "usage": {
+          "prompt_tokens": 536,
+          "total_tokens": 703,
+          "completion_tokens": 167,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    },
+    {
+      "label": "concurrent-evicted",
+      "seconds": 1.68,
+      "prompt": "How do I list all evicted pods?",
+      "response": {
+        "id": "chatcmpl-9de4099308aeec4c",
+        "object": "chat.completion",
+        "created": 1790097416,
+        "model": "command-helper",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "To list all evicted pods across all namespaces, use the following command:\n\n```sh\nkubectl get pods --all-namespaces -o json | jq '.items[] | select(.status.reason == \"Evicted\")'\n```\n\nThis command uses `kubectl` to get all pods across all namespaces and filters them using `jq` to show only those with a status reason of \"Evicted\".\n\nIf you want to list evicted pods in a specific namespace, replace `--all-namespaces` with `-n <namespace-name>`:\n\n```sh\nkubectl get pods -n <namespace-name> -o json | jq '.items[] | select(.status.reason == \"Evicted\")'\n```\n\nThis command filters evicted pods within the specified namespace.",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.24.0+rhaiv.13-43922ef2",
+        "usage": {
+          "prompt_tokens": 536,
+          "total_tokens": 688,
+          "completion_tokens": 152,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    },
+    {
+      "label": "concurrent-rollout",
+      "seconds": 3.65,
+      "prompt": "How do I check deployment rollout status and view logs in namespace demo? Include oc and kubectl examples.",
+      "response": {
+        "id": "chatcmpl-9213afbfa80ef428",
+        "object": "chat.completion",
+        "created": 1790097416,
+        "model": "command-helper",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "To check the rollout status of a deployment and view logs in the `demo` namespace, you can use the following commands:\n\n### Deployment Rollout Status\n```sh\n# Using oc\noc rollout status deployment/<deployment-name> -n demo\n\n# Using kubectl\nkubectl rollout status deployment/<deployment-name> -n demo\n```\nReplace `<deployment-name>` with the actual name of your deployment. This command will show you the status of the rollout, indicating whether it is in progress or completed.\n\n### Logs of Pods\n```sh\n# Using oc\noc logs <pod-name> -n demo\n\n# Using kubectl\nkubectl logs <pod-name> -n demo\n```\nReplace `<pod-name>` with the actual name of a pod. This command will display the logs of the specified pod.\n\n### Logs of All Pods in Deployment\nTo view logs for all pods managed by a deployment, you can use the following command:\n\n```sh\n# Using oc\noc logs -l app=<app-label> -n demo\n\n# Using kubectl\nkubectl logs -l app=<app-label> -n demo\n```\nReplace `<app-label>` with the label associated with your deployment. This command will display the logs of all pods that match the label in the specified namespace.\n\n### Explanation\n- **Rollout Status**: This command checks the status of the deployment rollout. It is useful for monitoring the progress of a deployment update.\n- **Logs**: This command displays the logs of a specific pod. It is useful for debugging and monitoring the application's behavior.\n\nThese commands are useful for managing and troubleshooting deployments in a Kubernetes or OpenShift environment.",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.24.0+rhaiv.13-43922ef2",
+        "usage": {
+          "prompt_tokens": 548,
+          "total_tokens": 885,
+          "completion_tokens": 337,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    }
+  ]
+}

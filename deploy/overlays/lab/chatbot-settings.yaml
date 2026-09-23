@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatbot
+spec:
+  template:
+    spec:
+      containers:
+        - name: chatbot
+          env:
+            - name: PUBLIC_ORIGIN
+              value: https://chat-intro-openshift-ai.apps.lab.example.com
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: chat
+spec:
+  host: chat-intro-openshift-ai.apps.lab.example.com

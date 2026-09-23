@@ -1,0 +1,62 @@
+{
+  "apiVersion": "v1",
+  "kind": "Pod",
+  "metadata": {
+    "name": "storage-check-read",
+    "namespace": "intro-openshift-ai"
+  },
+  "spec": {
+    "automountServiceAccountToken": false,
+    "restartPolicy": "Never",
+    "activeDeadlineSeconds": 300,
+    "securityContext": {
+      "runAsNonRoot": true,
+      "seccompProfile": {
+        "type": "RuntimeDefault"
+      }
+    },
+    "containers": [
+      {
+        "name": "check",
+        "image": "quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:392e9833715141f9fc2f4dbe6f622a950755fd2ae5e78fd31c78f558ea3e74b5",
+        "command": [
+          "/bin/bash",
+          "-c",
+          "set -eu; test \"$(cat /data/check.txt)\" = intro-ai-storage-check; printf \"second-worker\\n\" >> /data/check.txt; sync; test \"$(tail -n 1 /data/check.txt)\" = second-worker; echo READ-AND-WRITE-PASSED"
+        ],
+        "securityContext": {
+          "allowPrivilegeEscalation": false,
+          "capabilities": {
+            "drop": [
+              "ALL"
+            ]
+          }
+        },
+        "resources": {
+          "requests": {
+            "cpu": "50m",
+            "memory": "64Mi"
+          },
+          "limits": {
+            "cpu": "500m",
+            "memory": "128Mi"
+          }
+        },
+        "volumeMounts": [
+          {
+            "name": "data",
+            "mountPath": "/data"
+          }
+        ]
+      }
+    ],
+    "volumes": [
+      {
+        "name": "data",
+        "persistentVolumeClaim": {
+          "claimName": "storage-handoff-check"
+        }
+      }
+    ]
+  }
+}

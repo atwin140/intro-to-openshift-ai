@@ -1,0 +1,238 @@
+{
+  "apiVersion": "v1",
+  "kind": "ServiceAccount",
+  "metadata": {
+    "name": "chatbot"
+  },
+  "automountServiceAccountToken": false
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "chatbot"
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "matchLabels": {
+        "app": "lab-chatbot"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "lab-chatbot",
+          "intro-ai-model-client": "true"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "chatbot",
+        "automountServiceAccountToken": false,
+        "securityContext": {
+          "runAsNonRoot": true,
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "chatbot",
+            "image": "registry.redhat.io/ubi9/python-312@sha256:e81459cecdf1090ec959ff184e28261ffa426f66084622285545bebe4b2fcb22",
+            "command": [
+              "python3",
+              "-B",
+              "/app/server.py"
+            ],
+            "env": [
+              {
+                "name": "MODEL_URL",
+                "value": "http://command-helper-predictor:8080/v1/chat/completions"
+              },
+              {
+                "name": "PUBLIC_ORIGIN",
+                "value": "https://chat.example.invalid"
+              }
+            ],
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 8080
+              }
+            ],
+            "resources": {
+              "requests": {
+                "cpu": "100m",
+                "memory": "64Mi"
+              },
+              "limits": {
+                "cpu": "500m",
+                "memory": "256Mi"
+              }
+            },
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "readOnlyRootFilesystem": true,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "volumeMounts": [
+              {
+                "name": "code",
+                "mountPath": "/app",
+                "readOnly": true
+              }
+            ],
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/healthz",
+                "port": "http"
+              }
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/healthz",
+                "port": "http"
+              },
+              "initialDelaySeconds": 10
+            }
+          }
+        ],
+        "volumes": [
+          {
+            "name": "code",
+            "configMap": {
+              "name": "chatbot-code"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "chatbot"
+  },
+  "spec": {
+    "selector": {
+      "app": "lab-chatbot"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 8080,
+        "targetPort": "http"
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "route.openshift.io/v1",
+  "kind": "Route",
+  "metadata": {
+    "name": "chat",
+    "annotations": {
+      "haproxy.router.openshift.io/timeout": "150s"
+    }
+  },
+  "spec": {
+    "to": {
+      "kind": "Service",
+      "name": "chatbot"
+    },
+    "port": {
+      "targetPort": "http"
+    },
+    "tls": {
+      "termination": "edge",
+      "insecureEdgeTerminationPolicy": "Redirect"
+    }
+  }
+}
+---
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "chatbot-network"
+  },
+  "spec": {
+    "podSelector": {
+      "matchLabels": {
+        "app": "lab-chatbot"
+      }
+    },
+    "policyTypes": [
+      "Ingress",
+      "Egress"
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "policy-group.network.openshift.io/ingress": ""
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 8080
+          }
+        ]
+      }
+    ],
+    "egress": [
+      {
+        "to": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "serving.kserve.io/inferenceservice": "command-helper"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 8080
+          }
+        ]
+      },
+      {
+        "to": [
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "kubernetes.io/metadata.name": "openshift-dns"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "UDP",
+            "port": 5353
+          },
+          {
+            "protocol": "TCP",
+            "port": 5353
+          }
+        ]
+      }
+    ]
+  }
+}

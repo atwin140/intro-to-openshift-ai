@@ -1,0 +1,116 @@
+{
+  "apiVersion": "serving.kserve.io/v1alpha1",
+  "kind": "ServingRuntime",
+  "metadata": {
+    "annotations": {
+      "openshift.io/display-name": "Lab Diffusers \u2014 Stable Diffusion 1.5",
+      "opendatahub.io/runtime-version": "0.39.0"
+    },
+    "labels": {
+      "opendatahub.io/dashboard": "true"
+    },
+    "name": "lab-diffusers"
+  },
+  "spec": {
+    "annotations": {},
+    "containers": [
+      {
+        "args": [
+          "server:app",
+          "--app-dir",
+          "/opt/image-app",
+          "--host",
+          "0.0.0.0",
+          "--port",
+          "8080",
+          "--workers",
+          "1",
+          "--limit-concurrency",
+          "8"
+        ],
+        "command": [
+          "python",
+          "-m",
+          "uvicorn"
+        ],
+        "env": [
+          {
+            "name": "HF_HOME",
+            "value": "/tmp/hf"
+          },
+          {
+            "name": "HF_HUB_OFFLINE",
+            "value": "1"
+          },
+          {
+            "name": "TRANSFORMERS_OFFLINE",
+            "value": "1"
+          },
+          {
+            "name": "DO_NOT_TRACK",
+            "value": "1"
+          }
+        ],
+        "image": "registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:c056e61672b6aea489ad5dde0bd2f8497230f5333e87f7cf6c494eba3bfdc808",
+        "name": "kserve-container",
+        "ports": [
+          {
+            "containerPort": 8080,
+            "protocol": "TCP"
+          }
+        ],
+        "securityContext": {
+          "allowPrivilegeEscalation": false,
+          "capabilities": {
+            "drop": [
+              "ALL"
+            ]
+          },
+          "runAsNonRoot": true,
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "volumeMounts": [
+          {
+            "name": "shm",
+            "mountPath": "/dev/shm"
+          },
+          {
+            "name": "no-api-credentials",
+            "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+            "readOnly": true
+          },
+          {
+            "name": "image-app",
+            "mountPath": "/opt/image-app",
+            "readOnly": true
+          }
+        ],
+        "startupProbe": {
+          "httpGet": {
+            "path": "/health",
+            "port": 8080
+          },
+          "periodSeconds": 10,
+          "failureThreshold": 90
+        },
+        "readinessProbe": {
+          "httpGet": {
+            "path": "/health",
+            "port": 8080
+          },
+          "periodSeconds": 10,
+          "failureThreshold": 3
+        }
+      }
+    ],
+    "multiModel": false,
+    "supportedModelFormats": [
+      {
+        "name": "diffusers",
+        "autoSelect": true
+      }
+    ]
+  }
+}

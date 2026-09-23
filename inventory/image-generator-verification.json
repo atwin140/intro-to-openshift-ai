@@ -1,0 +1,38 @@
+{
+  "anonymous_http": 401,
+  "invalid_token_http": 401,
+  "model": {
+    "data": [
+      {
+        "id": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+        "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+        "size": "512x512"
+      }
+    ]
+  },
+  "empty_prompt": 422,
+  "blank_prompt": 422,
+  "too_many_steps": 422,
+  "extra_field": 422,
+  "wrong_type": 422,
+  "too_many_tokens": 422,
+  "oversized_request": 413,
+  "sample": {
+    "created": 1790137522,
+    "model": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+    "seed": 42,
+    "seconds": 1.68,
+    "peak_gpu_allocated_mib": 3258
+  },
+  "simultaneous_requests_http": [
+    200,
+    429
+  ],
+  "second_sample": {
+    "created": 1790137524,
+    "model": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+    "seed": 100,
+    "seconds": 2.09,
+    "peak_gpu_allocated_mib": 3258
+  }
+}

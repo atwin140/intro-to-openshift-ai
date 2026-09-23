@@ -1,0 +1,1997 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "template.openshift.io/v1",
+            "kind": "Template",
+            "metadata": {
+                "annotations": {
+                    "description": "AutoGluon ServingRuntime for tabular and time series inference",
+                    "internal.config.kubernetes.io/previousKinds": "Template",
+                    "internal.config.kubernetes.io/previousNames": "autogluon-runtime-template",
+                    "internal.config.kubernetes.io/previousNamespaces": "opendatahub",
+                    "opendatahub.io/apiProtocol": "REST",
+                    "opendatahub.io/model-type": "[\"predictive\"]",
+                    "opendatahub.io/modelServingSupport": "[\"single\"]",
+                    "openshift.io/display-name": "AutoGluon ServingRuntime for KServe",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "platform.opendatahub.io/instance.generation": "1",
+                    "platform.opendatahub.io/instance.name": "default-kserve",
+                    "platform.opendatahub.io/instance.uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4",
+                    "tags": "rhods,rhoai,kserve,servingruntime",
+                    "template.openshift.io/documentation-url": "https://github.com/opendatahub-io/kserve",
+                    "template.openshift.io/long-description": "This template defines resources needed to deploy AutoGluon ServingRuntime with KServe in Red Hat OpenShift AI for tabular and time series model inference"
+                },
+                "creationTimestamp": "2026-09-22T14:49:58Z",
+                "labels": {
+                    "app": "odh-dashboard",
+                    "app.kubernetes.io/part-of": "odh-dashboard",
+                    "opendatahub.io/dashboard": "true",
+                    "opendatahub.io/ootb": "true",
+                    "platform.opendatahub.io/part-of": "kserve"
+                },
+                "name": "autogluon-runtime-template",
+                "namespace": "redhat-ods-applications",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "components.platform.opendatahub.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Kserve",
+                        "name": "default-kserve",
+                        "uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4"
+                    }
+                ],
+                "resourceVersion": "2759134",
+                "uid": "67c8e9d1-e365-4626-a0ad-91c6298c3462"
+            },
+            "objects": [
+                {
+                    "apiVersion": "serving.kserve.io/v1alpha1",
+                    "kind": "ServingRuntime",
+                    "metadata": {
+                        "annotations": {
+                            "opendatahub.io/runtime-version": "v0.1.0",
+                            "openshift.io/display-name": "AutoGluon ServingRuntime for KServe"
+                        },
+                        "labels": {
+                            "opendatahub.io/dashboard": "true"
+                        },
+                        "name": "autogluon-runtime"
+                    },
+                    "spec": {
+                        "annotations": {
+                            "monitoring.opendatahub.io/scrape": "true",
+                            "opendatahub.io/kserve-runtime": "autogluon",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080"
+                        },
+                        "containers": [
+                            {
+                                "args": [
+                                    "--model_name={{.Name}}",
+                                    "--model_dir=/mnt/models",
+                                    "--http_port=8080"
+                                ],
+                                "image": "registry.redhat.io/rhoai/odh-kserve-autogluon-server-rhel9@sha256:f7657e619eaa9d01955c8aa99037fe695870da2fcc4f51ae586607cd29582f0c",
+                                "livenessProbe": {
+                                    "failureThreshold": 3,
+                                    "httpGet": {
+                                        "path": "/v2/health/live",
+                                        "port": 8080
+                                    },
+                                    "periodSeconds": 30,
+                                    "timeoutSeconds": 5
+                                },
+                                "name": "kserve-container",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 3,
+                                    "httpGet": {
+                                        "path": "/v2/models/{{.Name}}/ready",
+                                        "port": 8080
+                                    },
+                                    "periodSeconds": 5,
+                                    "timeoutSeconds": 5
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "4",
+                                        "memory": "8Gi"
+                                    },
+                                    "requests": {
+                                        "cpu": "1",
+                                        "memory": "4Gi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "privileged": false,
+                                    "readOnlyRootFilesystem": true,
+                                    "runAsNonRoot": true
+                                },
+                                "startupProbe": {
+                                    "failureThreshold": 60,
+                                    "httpGet": {
+                                        "path": "/v2/models/{{.Name}}/ready",
+                                        "port": 8080
+                                    },
+                                    "periodSeconds": 10,
+                                    "timeoutSeconds": 5
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/tmp",
+                                        "name": "tmp"
+                                    }
+                                ]
+                            }
+                        ],
+                        "multiModel": false,
+                        "protocolVersions": [
+                            "v1",
+                            "v2"
+                        ],
+                        "supportedModelFormats": [
+                            {
+                                "autoSelect": true,
+                                "name": "autogluon",
+                                "version": "1"
+                            }
+                        ],
+                        "volumes": [
+                            {
+                                "emptyDir": {},
+                                "name": "tmp"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "template.openshift.io/v1",
+            "kind": "Template",
+            "metadata": {
+                "annotations": {
+                    "description": "Guardrails detector Hugging Face serving runtime for KServe",
+                    "internal.config.kubernetes.io/previousKinds": "Template",
+                    "internal.config.kubernetes.io/previousNames": "guardrails-detector-huggingface-serving-template",
+                    "internal.config.kubernetes.io/previousNamespaces": "opendatahub",
+                    "opendatahub.io/apiProtocol": "REST",
+                    "opendatahub.io/model-type": "[\"predictive\"]",
+                    "opendatahub.io/modelServingSupport": "[\"single\"]",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "platform.opendatahub.io/instance.generation": "1",
+                    "platform.opendatahub.io/instance.name": "default-kserve",
+                    "platform.opendatahub.io/instance.uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4",
+                    "tags": "rhods,rhoai,kserve,servingruntime",
+                    "template.openshift.io/documentation-url": "https://github.com/trustyai-explainability/guardrails-detectors",
+                    "template.openshift.io/long-description": "This template defines resources needed to deploy guardrails-detector-huggingface-runtime with KServe in Red Hat Openshift AI. The guardrails-detector-huggingface-runtime is a serving runtime for Hugging Face models that are used to detect and mitigate certain types of risks in text data, such as hateful speech. This runtime is intended to be compatible with most Hugging Face AutoModelsForSequenceClassification models.",
+                    "template.openshift.io/support-url": "https://access.redhat.com"
+                },
+                "creationTimestamp": "2026-09-22T14:49:58Z",
+                "labels": {
+                    "app": "odh-dashboard",
+                    "app.kubernetes.io/part-of": "odh-dashboard",
+                    "opendatahub.io/dashboard": "true",
+                    "opendatahub.io/ootb": "true",
+                    "platform.opendatahub.io/part-of": "kserve"
+                },
+                "name": "guardrails-detector-huggingface-serving-template",
+                "namespace": "redhat-ods-applications",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "components.platform.opendatahub.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Kserve",
+                        "name": "default-kserve",
+                        "uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4"
+                    }
+                ],
+                "resourceVersion": "2759140",
+                "uid": "69bb857d-a8db-4f03-81e7-54e2295c0fea"
+            },
+            "objects": [
+                {
+                    "apiVersion": "serving.kserve.io/v1alpha1",
+                    "kind": "ServingRuntime",
+                    "metadata": {
+                        "annotations": {
+                            "opendatahub.io/recommended-accelerators": "[\"nvidia.com/gpu\"]",
+                            "openshift.io/display-name": "Hugging Face Detector ServingRuntime for KServe"
+                        },
+                        "labels": {
+                            "opendatahub.io/dashboard": "true"
+                        },
+                        "name": "guardrails-detector-huggingface-runtime"
+                    },
+                    "spec": {
+                        "annotations": {
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8000"
+                        },
+                        "containers": [
+                            {
+                                "args": [
+                                    "--workers=1",
+                                    "--host=0.0.0.0",
+                                    "--port=8000",
+                                    "--log-config=/common/log_conf.yaml"
+                                ],
+                                "command": [
+                                    "uvicorn",
+                                    "app:app"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "MODEL_DIR",
+                                        "value": "/mnt/models"
+                                    },
+                                    {
+                                        "name": "HF_HOME",
+                                        "value": "/tmp/hf_home"
+                                    },
+                                    {
+                                        "name": "DETECTOR_NAME",
+                                        "valueFrom": {
+                                            "fieldRef": {
+                                                "fieldPath": "metadata.name"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "image": "registry.redhat.io/rhoai/odh-guardrails-detector-huggingface-runtime-rhel9@sha256:770e7d6c921a95eb535c2a237fed947b090fdabc5303c47cc91f8dbe66583dc9",
+                                "name": "kserve-container",
+                                "ports": [
+                                    {
+                                        "containerPort": 8000,
+                                        "protocol": "TCP"
+                                    }
+                                ]
+                            }
+                        ],
+                        "multiModel": false,
+                        "supportedModelFormats": [
+                            {
+                                "autoSelect": true,
+                                "name": "guardrails-detector-hf-runtime"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "template.openshift.io/v1",
+            "kind": "Template",
+            "metadata": {
+                "annotations": {
+                    "description": "OpenVino Model Serving Definition",
+                    "internal.config.kubernetes.io/previousKinds": "Template",
+                    "internal.config.kubernetes.io/previousNames": "kserve-ovms",
+                    "internal.config.kubernetes.io/previousNamespaces": "opendatahub",
+                    "opendatahub.io/apiProtocol": "REST",
+                    "opendatahub.io/model-type": "[\"predictive\"]",
+                    "opendatahub.io/modelServingSupport": "[\"single\"]",
+                    "platform.opendatahub.io/instance.generation": "1",
+                    "platform.opendatahub.io/instance.name": "default-kserve",
+                    "platform.opendatahub.io/instance.uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4",
+                    "tags": "kserve-ovms,servingruntime"
+                },
+                "creationTimestamp": "2026-09-22T14:49:59Z",
+                "labels": {
+                    "app": "odh-dashboard",
+                    "app.kubernetes.io/part-of": "odh-dashboard",
+                    "opendatahub.io/dashboard": "true",
+                    "opendatahub.io/ootb": "true",
+                    "platform.opendatahub.io/part-of": "kserve"
+                },
+                "name": "kserve-ovms",
+                "namespace": "redhat-ods-applications",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "components.platform.opendatahub.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Kserve",
+                        "name": "default-kserve",
+                        "uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4"
+                    }
+                ],
+                "resourceVersion": "2759143",
+                "uid": "2cacc4b9-2d42-432f-bca9-429154338049"
+            },
+            "objects": [
+                {
+                    "apiVersion": "serving.kserve.io/v1alpha1",
+                    "kind": "ServingRuntime",
+                    "metadata": {
+                        "annotations": {
+                            "opendatahub.io/recommended-accelerators": "[\"nvidia.com/gpu\"]",
+                            "opendatahub.io/runtime-version": "v2026.1.0",
+                            "openshift.io/display-name": "OpenVINO Model Server"
+                        },
+                        "labels": {
+                            "opendatahub.io/dashboard": "true"
+                        },
+                        "name": "kserve-ovms"
+                    },
+                    "spec": {
+                        "annotations": {
+                            "opendatahub.io/kserve-runtime": "ovms",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8888"
+                        },
+                        "containers": [
+                            {
+                                "args": [
+                                    "--model_name={{.Name}}",
+                                    "--port=8001",
+                                    "--rest_port=8888",
+                                    "--model_path=/mnt/models",
+                                    "--file_system_poll_wait_seconds=0",
+                                    "--metrics_enable"
+                                ],
+                                "image": "registry.redhat.io/rhoai/odh-openvino-model-server-rhel9@sha256:1a27f3047b14a16cd6aeb7925fd3564c0682df3ff019af7eeef62e1af62f9adc",
+                                "name": "kserve-container",
+                                "ports": [
+                                    {
+                                        "containerPort": 8888,
+                                        "protocol": "TCP"
+                                    }
+                                ]
+                            }
+                        ],
+                        "multiModel": false,
+                        "protocolVersions": [
+                            "v2",
+                            "grpc-v2"
+                        ],
+                        "supportedModelFormats": [
+                            {
+                                "autoSelect": true,
+                                "name": "openvino_ir",
+                                "version": "opset13"
+                            },
+                            {
+                                "name": "onnx",
+                                "version": "1"
+                            },
+                            {
+                                "autoSelect": true,
+                                "name": "tensorflow",
+                                "version": "1"
+                            },
+                            {
+                                "autoSelect": true,
+                                "name": "tensorflow",
+                                "version": "2"
+                            },
+                            {
+                                "autoSelect": true,
+                                "name": "paddle",
+                                "version": "2"
+                            },
+                            {
+                                "autoSelect": true,
+                                "name": "pytorch",
+                                "version": "2"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "template.openshift.io/v1",
+            "kind": "Template",
+            "metadata": {
+                "annotations": {
+                    "description": "MLServer ServingRuntime with NVIDIA CUDA support (for NVIDIA GPUs)",
+                    "internal.config.kubernetes.io/previousKinds": "Template",
+                    "internal.config.kubernetes.io/previousNames": "mlserver-cuda-runtime-template",
+                    "internal.config.kubernetes.io/previousNamespaces": "opendatahub",
+                    "opendatahub.io/apiProtocol": "REST",
+                    "opendatahub.io/model-type": "[\"predictive\"]",
+                    "opendatahub.io/modelServingSupport": "[\"single\"]",
+                    "openshift.io/display-name": "MLServer NVIDIA GPU ServingRuntime for KServe",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "platform.opendatahub.io/instance.generation": "1",
+                    "platform.opendatahub.io/instance.name": "default-kserve",
+                    "platform.opendatahub.io/instance.uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4",
+                    "tags": "rhods,rhoai,kserve,servingruntime",
+                    "template.openshift.io/documentation-url": "https://github.com/opendatahub-io/MLServer",
+                    "template.openshift.io/long-description": "This template defines resources needed to deploy MLServer NVIDIA GPU ServingRuntime with KServe in Red Hat OpenShift AI"
+                },
+                "creationTimestamp": "2026-09-22T14:49:59Z",
+                "labels": {
+                    "app": "odh-dashboard",
+                    "app.kubernetes.io/part-of": "odh-dashboard",
+                    "opendatahub.io/dashboard": "true",
+                    "opendatahub.io/ootb": "true",
+                    "platform.opendatahub.io/part-of": "kserve"
+                },
+                "name": "mlserver-cuda-runtime-template",
+                "namespace": "redhat-ods-applications",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "components.platform.opendatahub.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Kserve",
+                        "name": "default-kserve",
+                        "uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4"
+                    }
+                ],
+                "resourceVersion": "2759146",
+                "uid": "a93cbba4-1354-4ac8-94d1-9144cf49fd13"
+            },
+            "objects": [
+                {
+                    "apiVersion": "serving.kserve.io/v1alpha1",
+                    "kind": "ServingRuntime",
+                    "metadata": {
+                        "annotations": {
+                            "opendatahub.io/recommended-accelerators": "[\"nvidia.com/gpu\"]",
+                            "opendatahub.io/runtime-version": "1.7.1",
+                            "openshift.io/display-name": "MLServer NVIDIA GPU ServingRuntime for KServe",
+                            "serving.kserve.io/server-type": "mlserver"
+                        },
+                        "labels": {
+                            "opendatahub.io/dashboard": "true"
+                        },
+                        "name": "mlserver-cuda-runtime"
+                    },
+                    "spec": {
+                        "annotations": {
+                            "monitoring.opendatahub.io/scrape": "true",
+                            "opendatahub.io/kserve-runtime": "mlserver",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8082"
+                        },
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "MLSERVER_MODEL_IMPLEMENTATION",
+                                        "value": "{{.Labels.modelClass}}"
+                                    },
+                                    {
+                                        "name": "MLSERVER_HTTP_PORT",
+                                        "value": "8080"
+                                    },
+                                    {
+                                        "name": "MLSERVER_MODELS_DIR",
+                                        "value": "/mnt/models"
+                                    }
+                                ],
+                                "image": "registry.redhat.io/rhoai/odh-mlserver-cuda-rhel9@sha256:2baaf44a798d4f186db6e1ac72bc4b36c3413a6f8f952073d7a33bd3d13426dc",
+                                "livenessProbe": {
+                                    "failureThreshold": 10,
+                                    "httpGet": {
+                                        "path": "/v2/models/{{.Name}}/ready",
+                                        "port": 8080
+                                    },
+                                    "initialDelaySeconds": 20,
+                                    "periodSeconds": 10,
+                                    "timeoutSeconds": 5
+                                },
+                                "name": "kserve-container",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 3,
+                                    "httpGet": {
+                                        "path": "/v2/models/{{.Name}}/ready",
+                                        "port": 8080
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "periodSeconds": 5,
+                                    "timeoutSeconds": 5
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "4",
+                                        "memory": "8Gi"
+                                    },
+                                    "requests": {
+                                        "cpu": "1",
+                                        "memory": "4Gi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "privileged": false,
+                                    "runAsNonRoot": true
+                                },
+                                "startupProbe": {
+                                    "exec": {
+                                        "command": [
+                                            "/bin/sh",
+                                            "-c",
+                                            "[ -n \"$(ls -A /mnt/models 2\u003e/dev/null)\" ]\n"
+                                        ]
+                                    },
+                                    "failureThreshold": 1,
+                                    "initialDelaySeconds": 1,
+                                    "periodSeconds": 1
+                                }
+                            }
+                        ],
+                        "multiModel": false,
+                        "protocolVersions": [
+                            "v2"
+                        ],
+                        "supportedModelFormats": [
+                            {
+                                "name": "onnx",
+                                "version": "1"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "template.openshift.io/v1",
+            "kind": "Template",
+            "metadata": {
+                "annotations": {
+                    "description": "MLServer is a lightweight, extensible inference server for serving machine learning models across multiple frameworks.",
+                    "internal.config.kubernetes.io/previousKinds": "Template",
+                    "internal.config.kubernetes.io/previousNames": "mlserver-runtime-template",
+                    "internal.config.kubernetes.io/previousNamespaces": "opendatahub",
+                    "opendatahub.io/apiProtocol": "REST",
+                    "opendatahub.io/model-type": "[\"predictive\"]",
+                    "opendatahub.io/modelServingSupport": "[\"single\"]",
+                    "openshift.io/display-name": "MLServer ServingRuntime for KServe",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "platform.opendatahub.io/instance.generation": "1",
+                    "platform.opendatahub.io/instance.name": "default-kserve",
+                    "platform.opendatahub.io/instance.uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4",
+                    "tags": "rhods,rhoai,kserve,servingruntime",
+                    "template.openshift.io/documentation-url": "https://github.com/opendatahub-io/MLServer",
+                    "template.openshift.io/long-description": "This template defines resources needed to deploy MLServer ServingRuntime with KServe in Red Hat OpenShift AI"
+                },
+                "creationTimestamp": "2026-09-22T14:49:59Z",
+                "labels": {
+                    "app": "odh-dashboard",
+                    "app.kubernetes.io/part-of": "odh-dashboard",
+                    "opendatahub.io/dashboard": "true",
+                    "opendatahub.io/ootb": "true",
+                    "platform.opendatahub.io/part-of": "kserve"
+                },
+                "name": "mlserver-runtime-template",
+                "namespace": "redhat-ods-applications",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "components.platform.opendatahub.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Kserve",
+                        "name": "default-kserve",
+                        "uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4"
+                    }
+                ],
+                "resourceVersion": "2759152",
+                "uid": "c32281e6-e77d-44b9-905f-0dd42c7896f8"
+            },
+            "objects": [
+                {
+                    "apiVersion": "serving.kserve.io/v1alpha1",
+                    "kind": "ServingRuntime",
+                    "metadata": {
+                        "annotations": {
+                            "opendatahub.io/runtime-version": "1.7.1",
+                            "openshift.io/display-name": "MLServer ServingRuntime for KServe",
+                            "serving.kserve.io/server-type": "mlserver"
+                        },
+                        "labels": {
+                            "opendatahub.io/dashboard": "true"
+                        },
+                        "name": "mlserver-runtime"
+                    },
+                    "spec": {
+                        "annotations": {
+                            "monitoring.opendatahub.io/scrape": "true",
+                            "opendatahub.io/kserve-runtime": "mlserver",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8082"
+                        },
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "MLSERVER_MODEL_IMPLEMENTATION",
+                                        "value": "{{.Labels.modelClass}}"
+                                    },
+                                    {
+                                        "name": "MLSERVER_HTTP_PORT",
+                                        "value": "8080"
+                                    },
+                                    {
+                                        "name": "MLSERVER_MODELS_DIR",
+                                        "value": "/mnt/models"
+                                    }
+                                ],
+                                "image": "registry.redhat.io/rhoai/odh-mlserver-rhel9@sha256:3b1b45ae7b7a347b00ea6dc2e2154064c3ed948ffaff84e33e9d0282bf403361",
+                                "livenessProbe": {
+                                    "failureThreshold": 6,
+                                    "httpGet": {
+                                        "path": "/v2/models/{{.Name}}/ready",
+                                        "port": 8080
+                                    },
+                                    "initialDelaySeconds": 20,
+                                    "periodSeconds": 10,
+                                    "timeoutSeconds": 5
+                                },
+                                "name": "kserve-container",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 3,
+                                    "httpGet": {
+                                        "path": "/v2/models/{{.Name}}/ready",
+                                        "port": 8080
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "periodSeconds": 5,
+                                    "timeoutSeconds": 5
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "2",
+                                        "memory": "4Gi"
+                                    },
+                                    "requests": {
+                                        "cpu": "1",
+                                        "memory": "2Gi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "privileged": false,
+                                    "runAsNonRoot": true
+                                },
+                                "startupProbe": {
+                                    "exec": {
+                                        "command": [
+                                            "/bin/sh",
+                                            "-c",
+                                            "[ -n \"$(ls -A /mnt/models 2\u003e/dev/null)\" ]\n"
+                                        ]
+                                    },
+                                    "failureThreshold": 1,
+                                    "initialDelaySeconds": 1,
+                                    "periodSeconds": 1
+                                }
+                            }
+                        ],
+                        "multiModel": false,
+                        "protocolVersions": [
+                            "v2"
+                        ],
+                        "supportedModelFormats": [
+                            {
+                                "name": "sklearn",
+                                "version": "0"
+                            },
+                            {
+                                "name": "sklearn",
+                                "version": "1"
+                            },
+                            {
+                                "name": "xgboost",
+                                "version": "1"
+                            },
+                            {
+                                "name": "xgboost",
+                                "version": "2"
+                            },
+                            {
+                                "name": "lightgbm",
+                                "version": "3"
+                            },
+                            {
+                                "name": "lightgbm",
+                                "version": "4"
+                            },
+                            {
+                                "name": "onnx",
+                                "version": "1"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "template.openshift.io/v1",
+            "kind": "Template",
+            "metadata": {
+                "annotations": {
+                    "description": "vLLM is a high-throughput and memory-efficient inference and serving engine for LLMs",
+                    "internal.config.kubernetes.io/previousKinds": "Template",
+                    "internal.config.kubernetes.io/previousNames": "vllm-cpu-runtime-template",
+                    "internal.config.kubernetes.io/previousNamespaces": "opendatahub",
+                    "opendatahub.io/apiProtocol": "REST",
+                    "opendatahub.io/model-type": "[\"generative\"]",
+                    "opendatahub.io/modelServingSupport": "[\"single\"]",
+                    "openshift.io/display-name": "vLLM CPU (ppc64le/s390x) ServingRuntime for KServe",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "platform.opendatahub.io/instance.generation": "1",
+                    "platform.opendatahub.io/instance.name": "default-kserve",
+                    "platform.opendatahub.io/instance.uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4",
+                    "tags": "rhods,rhoai,kserve,servingruntime",
+                    "template.openshift.io/documentation-url": "https://github.com/opendatahub-io/vllm",
+                    "template.openshift.io/long-description": "This template defines resources needed to deploy vLLM CPU ServingRuntime with KServe in Red Hat OpenShift AI (ppc64le/s390x architectures only)"
+                },
+                "creationTimestamp": "2026-09-22T14:49:59Z",
+                "labels": {
+                    "app": "odh-dashboard",
+                    "app.kubernetes.io/part-of": "odh-dashboard",
+                    "opendatahub.io/dashboard": "true",
+                    "opendatahub.io/ootb": "true",
+                    "platform.opendatahub.io/part-of": "kserve"
+                },
+                "name": "vllm-cpu-runtime-template",
+                "namespace": "redhat-ods-applications",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "components.platform.opendatahub.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Kserve",
+                        "name": "default-kserve",
+                        "uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4"
+                    }
+                ],
+                "resourceVersion": "2759157",
+                "uid": "9c1a9262-2c66-454b-8ea3-eb908433f0a2"
+            },
+            "objects": [
+                {
+                    "apiVersion": "serving.kserve.io/v1alpha1",
+                    "kind": "ServingRuntime",
+                    "metadata": {
+                        "annotations": {
+                            "opendatahub.io/runtime-version": "v0.24.0",
+                            "openshift.io/display-name": "vLLM CPU (ppc64le/s390x) ServingRuntime for KServe"
+                        },
+                        "labels": {
+                            "opendatahub.io/dashboard": "true"
+                        },
+                        "name": "vllm-cpu-runtime"
+                    },
+                    "spec": {
+                        "annotations": {
+                            "opendatahub.io/kserve-runtime": "vllm",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080"
+                        },
+                        "containers": [
+                            {
+                                "args": [
+                                    "--port=8080",
+                                    "--model=/mnt/models",
+                                    "--served-model-name={{.Name}}"
+                                ],
+                                "command": [
+                                    "python",
+                                    "-m",
+                                    "vllm.entrypoints.openai.api_server"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "HF_HOME",
+                                        "value": "/tmp/hf_home"
+                                    }
+                                ],
+                                "image": "registry.redhat.io/rhoai/odh-vllm-cpu-rhel9@sha256:2db58636e8801cac78ae821cddac85cb464f76a1cb74550121a66e54d7c00d04",
+                                "name": "kserve-container",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ]
+                            }
+                        ],
+                        "multiModel": false,
+                        "supportedModelFormats": [
+                            {
+                                "autoSelect": true,
+                                "name": "vLLM"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "template.openshift.io/v1",
+            "kind": "Template",
+            "metadata": {
+                "annotations": {
+                    "description": "vLLM is a high-throughput and memory-efficient inference and serving engine for LLMs",
+                    "internal.config.kubernetes.io/previousKinds": "Template",
+                    "internal.config.kubernetes.io/previousNames": "vllm-cpu-x86-runtime-template",
+                    "internal.config.kubernetes.io/previousNamespaces": "opendatahub",
+                    "opendatahub.io/apiProtocol": "REST",
+                    "opendatahub.io/model-type": "[\"generative\"]",
+                    "opendatahub.io/modelServingSupport": "[\"single\"]",
+                    "openshift.io/display-name": "vLLM CPU (x86) ServingRuntime for KServe - Tech Preview",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "platform.opendatahub.io/instance.generation": "1",
+                    "platform.opendatahub.io/instance.name": "default-kserve",
+                    "platform.opendatahub.io/instance.uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4",
+                    "tags": "rhods,rhoai,kserve,servingruntime",
+                    "template.openshift.io/documentation-url": "https://github.com/opendatahub-io/vllm",
+                    "template.openshift.io/long-description": "This template defines resources needed to deploy vLLM CPU ServingRuntime with KServe in Red Hat OpenShift AI (x86 architectures only)"
+                },
+                "creationTimestamp": "2026-09-22T14:49:59Z",
+                "labels": {
+                    "app": "odh-dashboard",
+                    "app.kubernetes.io/part-of": "odh-dashboard",
+                    "opendatahub.io/dashboard": "true",
+                    "opendatahub.io/ootb": "true",
+                    "platform.opendatahub.io/part-of": "kserve"
+                },
+                "name": "vllm-cpu-x86-runtime-template",
+                "namespace": "redhat-ods-applications",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "components.platform.opendatahub.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Kserve",
+                        "name": "default-kserve",
+                        "uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4"
+                    }
+                ],
+                "resourceVersion": "2759161",
+                "uid": "f38218a7-69d9-4c0b-8bb3-4690c6212ff9"
+            },
+            "objects": [
+                {
+                    "apiVersion": "serving.kserve.io/v1alpha1",
+                    "kind": "ServingRuntime",
+                    "metadata": {
+                        "annotations": {
+                            "opendatahub.io/runtime-version": "v0.24.0",
+                            "openshift.io/display-name": "vLLM CPU (x86) ServingRuntime for KServe"
+                        },
+                        "labels": {
+                            "opendatahub.io/dashboard": "true"
+                        },
+                        "name": "vllm-cpu-x86-runtime"
+                    },
+                    "spec": {
+                        "annotations": {
+                            "opendatahub.io/kserve-runtime": "vllm",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080"
+                        },
+                        "containers": [
+                            {
+                                "args": [
+                                    "--port=8080",
+                                    "--model=/mnt/models",
+                                    "--served-model-name={{.Name}}"
+                                ],
+                                "command": [
+                                    "python",
+                                    "-m",
+                                    "vllm.entrypoints.openai.api_server"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "HF_HOME",
+                                        "value": "/tmp/hf_home"
+                                    }
+                                ],
+                                "image": "registry.redhat.io/rhaii/vllm-cpu-rhel9@sha256:7a28b867955055a8836ea2a78e70b8bad63c1ee50e8a5f8dd95d1194f20ec489",
+                                "name": "kserve-container",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ]
+                            }
+                        ],
+                        "multiModel": false,
+                        "supportedModelFormats": [
+                            {
+                                "autoSelect": true,
+                                "name": "vLLM"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "template.openshift.io/v1",
+            "kind": "Template",
+            "metadata": {
+                "annotations": {
+                    "description": "vLLM ServingRuntime with CUDA support (for NVIDIA GPUs)",
+                    "internal.config.kubernetes.io/previousKinds": "Template",
+                    "internal.config.kubernetes.io/previousNames": "vllm-cuda-runtime-template",
+                    "internal.config.kubernetes.io/previousNamespaces": "opendatahub",
+                    "opendatahub.io/apiProtocol": "REST",
+                    "opendatahub.io/model-type": "[\"generative\"]",
+                    "opendatahub.io/modelServingSupport": "[\"single\"]",
+                    "openshift.io/display-name": "vLLM NVIDIA GPU ServingRuntime for KServe",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "platform.opendatahub.io/instance.generation": "1",
+                    "platform.opendatahub.io/instance.name": "default-kserve",
+                    "platform.opendatahub.io/instance.uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4",
+                    "tags": "rhods,rhoai,kserve,servingruntime",
+                    "template.openshift.io/documentation-url": "https://github.com/opendatahub-io/vllm",
+                    "template.openshift.io/long-description": "This template defines resources needed to deploy vLLM NVIDIA GPU ServingRuntime with KServe in Red Hat OpenShift AI"
+                },
+                "creationTimestamp": "2026-09-22T14:49:59Z",
+                "labels": {
+                    "app": "odh-dashboard",
+                    "app.kubernetes.io/part-of": "odh-dashboard",
+                    "opendatahub.io/dashboard": "true",
+                    "opendatahub.io/ootb": "true",
+                    "platform.opendatahub.io/part-of": "kserve"
+                },
+                "name": "vllm-cuda-runtime-template",
+                "namespace": "redhat-ods-applications",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "components.platform.opendatahub.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Kserve",
+                        "name": "default-kserve",
+                        "uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4"
+                    }
+                ],
+                "resourceVersion": "2759166",
+                "uid": "61dd52f5-54e3-4013-9609-90d024862938"
+            },
+            "objects": [
+                {
+                    "apiVersion": "serving.kserve.io/v1alpha1",
+                    "kind": "ServingRuntime",
+                    "metadata": {
+                        "annotations": {
+                            "opendatahub.io/recommended-accelerators": "[\"nvidia.com/gpu\"]",
+                            "opendatahub.io/runtime-version": "v0.24.0",
+                            "openshift.io/display-name": "vLLM NVIDIA GPU ServingRuntime for KServe"
+                        },
+                        "labels": {
+                            "opendatahub.io/dashboard": "true"
+                        },
+                        "name": "vllm-cuda-runtime"
+                    },
+                    "spec": {
+                        "annotations": {
+                            "opendatahub.io/kserve-runtime": "vllm",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080"
+                        },
+                        "containers": [
+                            {
+                                "args": [
+                                    "--port=8080",
+                                    "--model=/mnt/models",
+                                    "--served-model-name={{.Name}}"
+                                ],
+                                "command": [
+                                    "python",
+                                    "-m",
+                                    "vllm.entrypoints.openai.api_server"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "HF_HOME",
+                                        "value": "/tmp/hf_home"
+                                    }
+                                ],
+                                "image": "registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:c056e61672b6aea489ad5dde0bd2f8497230f5333e87f7cf6c494eba3bfdc808",
+                                "name": "kserve-container",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ]
+                            }
+                        ],
+                        "multiModel": false,
+                        "supportedModelFormats": [
+                            {
+                                "autoSelect": true,
+                                "name": "vLLM"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "template.openshift.io/v1",
+            "kind": "Template",
+            "metadata": {
+                "annotations": {
+                    "description": "vLLM ServingRuntime to support Gaudi(for Habana AI processors)",
+                    "internal.config.kubernetes.io/previousKinds": "Template",
+                    "internal.config.kubernetes.io/previousNames": "vllm-gaudi-runtime-template",
+                    "internal.config.kubernetes.io/previousNamespaces": "opendatahub",
+                    "opendatahub.io/apiProtocol": "REST",
+                    "opendatahub.io/model-type": "[\"generative\"]",
+                    "opendatahub.io/modelServingSupport": "[\"single\"]",
+                    "openshift.io/display-name": "vLLM Intel Gaudi Accelerator ServingRuntime for KServe",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "platform.opendatahub.io/instance.generation": "1",
+                    "platform.opendatahub.io/instance.name": "default-kserve",
+                    "platform.opendatahub.io/instance.uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4",
+                    "tags": "rhods,rhoai,kserve,servingruntime",
+                    "template.openshift.io/documentation-url": "https://github.com/opendatahub-io/vllm",
+                    "template.openshift.io/long-description": "This template defines resources needed to deploy vLLM Intel Gaudi Accelerator ServingRuntime with KServe in Red Hat OpenShift AI"
+                },
+                "creationTimestamp": "2026-09-22T14:49:59Z",
+                "labels": {
+                    "app": "odh-dashboard",
+                    "app.kubernetes.io/part-of": "odh-dashboard",
+                    "opendatahub.io/dashboard": "true",
+                    "opendatahub.io/ootb": "true",
+                    "platform.opendatahub.io/part-of": "kserve"
+                },
+                "name": "vllm-gaudi-runtime-template",
+                "namespace": "redhat-ods-applications",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "components.platform.opendatahub.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Kserve",
+                        "name": "default-kserve",
+                        "uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4"
+                    }
+                ],
+                "resourceVersion": "2759171",
+                "uid": "eaf2c9b5-0b5a-4eab-ba35-1a8d16160306"
+            },
+            "objects": [
+                {
+                    "apiVersion": "serving.kserve.io/v1alpha1",
+                    "kind": "ServingRuntime",
+                    "metadata": {
+                        "annotations": {
+                            "opendatahub.io/recommended-accelerators": "[\"habana.ai/gaudi\"]",
+                            "opendatahub.io/runtime-version": "v0.24.0",
+                            "openshift.io/display-name": "vLLM Intel Gaudi Accelerator ServingRuntime for KServe"
+                        },
+                        "labels": {
+                            "opendatahub.io/dashboard": "true"
+                        },
+                        "name": "vllm-gaudi-runtime"
+                    },
+                    "spec": {
+                        "annotations": {
+                            "opendatahub.io/kserve-runtime": "vllm",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080"
+                        },
+                        "builtInAdapter": {
+                            "modelLoadingTimeoutMillis": 90000
+                        },
+                        "containers": [
+                            {
+                                "args": [
+                                    "--port=8080",
+                                    "--model=/mnt/models",
+                                    "--served-model-name={{.Name}}"
+                                ],
+                                "command": [
+                                    "python",
+                                    "-m",
+                                    "vllm.entrypoints.openai.api_server"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "HF_HOME",
+                                        "value": "/tmp/hf_home"
+                                    }
+                                ],
+                                "image": "registry.redhat.io/rhaii/vllm-gaudi-rhel9@sha256:f44bd360c45f3cd025491cfe608514263a1d00f8a6a5b6cc7ef9df31da749efd",
+                                "name": "kserve-container",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ]
+                            }
+                        ],
+                        "multiModel": false,
+                        "supportedModelFormats": [
+                            {
+                                "autoSelect": false,
+                                "name": "vLLM"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "template.openshift.io/v1",
+            "kind": "Template",
+            "metadata": {
+                "annotations": {
+                    "description": "vLLM is a high-throughput and memory-efficient inference and serving engine for LLMs",
+                    "internal.config.kubernetes.io/previousKinds": "Template",
+                    "internal.config.kubernetes.io/previousNames": "vllm-multinode-runtime-template",
+                    "internal.config.kubernetes.io/previousNamespaces": "opendatahub",
+                    "opendatahub.io/apiProtocol": "REST",
+                    "opendatahub.io/model-type": "[\"generative\"]",
+                    "opendatahub.io/modelServingSupport": "[\"single\"]",
+                    "openshift.io/display-name": "vLLM Multi-Node ServingRuntime for KServe",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "platform.opendatahub.io/instance.generation": "1",
+                    "platform.opendatahub.io/instance.name": "default-kserve",
+                    "platform.opendatahub.io/instance.uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4",
+                    "tags": "rhods,rhoai,kserve,servingruntime,multi-node",
+                    "template.openshift.io/documentation-url": "https://github.com/opendatahub-io/vllm",
+                    "template.openshift.io/long-description": "This template defines resources needed to deploy vLLM Multi-Node ServingRuntime with KServe in Red Hat OpenShift AI"
+                },
+                "creationTimestamp": "2026-09-22T14:49:59Z",
+                "labels": {
+                    "app": "odh-dashboard",
+                    "app.kubernetes.io/part-of": "odh-dashboard",
+                    "opendatahub.io/dashboard": "false",
+                    "opendatahub.io/ootb": "true",
+                    "platform.opendatahub.io/part-of": "kserve"
+                },
+                "name": "vllm-multinode-runtime-template",
+                "namespace": "redhat-ods-applications",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "components.platform.opendatahub.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Kserve",
+                        "name": "default-kserve",
+                        "uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4"
+                    }
+                ],
+                "resourceVersion": "2759172",
+                "uid": "19b8b659-1039-44ac-9064-8e1537a5fbd2"
+            },
+            "objects": [
+                {
+                    "apiVersion": "serving.kserve.io/v1alpha1",
+                    "kind": "ServingRuntime",
+                    "metadata": {
+                        "annotations": {
+                            "opendatahub.io/recommended-accelerators": "[\"nvidia.com/gpu\"]",
+                            "opendatahub.io/runtime-version": "v0.24.0",
+                            "openshift.io/display-name": "vLLM Multi-Node ServingRuntime for KServe"
+                        },
+                        "labels": {
+                            "opendatahub.io/dashboard": "false"
+                        },
+                        "name": "vllm-multinode-runtime"
+                    },
+                    "spec": {
+                        "annotations": {
+                            "multinode/executor-backend": "mp",
+                            "opendatahub.io/kserve-runtime": "vllm",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080"
+                        },
+                        "containers": [
+                            {
+                                "args": [
+                                    "/mnt/models",
+                                    "--port=8080",
+                                    "--served-model-name={{.Name}}",
+                                    "--distributed-executor-backend=mp",
+                                    "--tensor-parallel-size=$(TENSOR_PARALLEL_SIZE)",
+                                    "--pipeline-parallel-size=$(PIPELINE_PARALLEL_SIZE)",
+                                    "--nnodes=$(PIPELINE_PARALLEL_SIZE)",
+                                    "--node-rank=0",
+                                    "--master-addr=$(POD_IP)",
+                                    "--master-port=$(MASTER_PORT)"
+                                ],
+                                "command": [
+                                    "vllm",
+                                    "serve"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "MASTER_PORT",
+                                        "value": "29500"
+                                    },
+                                    {
+                                        "name": "POD_IP",
+                                        "valueFrom": {
+                                            "fieldRef": {
+                                                "fieldPath": "status.podIP"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "POD_NAMESPACE",
+                                        "valueFrom": {
+                                            "fieldRef": {
+                                                "fieldPath": "metadata.namespace"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "VLLM_NO_USAGE_STATS",
+                                        "value": "1"
+                                    },
+                                    {
+                                        "name": "HOME",
+                                        "value": "/tmp"
+                                    },
+                                    {
+                                        "name": "HF_HOME",
+                                        "value": "/tmp/hf_home"
+                                    }
+                                ],
+                                "image": "registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:c056e61672b6aea489ad5dde0bd2f8497230f5333e87f7cf6c494eba3bfdc808",
+                                "livenessProbe": {
+                                    "exec": {
+                                        "command": [
+                                            "bash",
+                                            "-c",
+                                            "health_code=$(curl -s --max-time 5 -o /dev/null -w \"%{http_code}\" -X POST http://localhost:8080/v1/completions \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"model\":\"'\"${MODEL_NAME}\"'\",\"prompt\":\"healthcheck\",\"max_tokens\":1}')\nif [[ \"${health_code}\" != \"200\" ]]; then\n  echo \"Unhealthy - inference check failed (HTTP ${health_code}).\"\n  exit 1\nfi\n"
+                                        ]
+                                    },
+                                    "failureThreshold": 3,
+                                    "periodSeconds": 30,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 10
+                                },
+                                "name": "kserve-container",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "name": "http",
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 2,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 8080
+                                    },
+                                    "periodSeconds": 5,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 15
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "16",
+                                        "memory": "48Gi"
+                                    },
+                                    "requests": {
+                                        "cpu": "8",
+                                        "memory": "24Gi"
+                                    }
+                                },
+                                "startupProbe": {
+                                    "failureThreshold": 120,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 8080
+                                    },
+                                    "initialDelaySeconds": 20,
+                                    "periodSeconds": 30,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 30
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/dev/shm",
+                                        "name": "shm"
+                                    }
+                                ]
+                            }
+                        ],
+                        "multiModel": false,
+                        "supportedModelFormats": [
+                            {
+                                "autoSelect": true,
+                                "name": "vLLM",
+                                "priority": 2
+                            }
+                        ],
+                        "volumes": [
+                            {
+                                "emptyDir": {
+                                    "medium": "Memory",
+                                    "sizeLimit": "12Gi"
+                                },
+                                "name": "shm"
+                            }
+                        ],
+                        "workerSpec": {
+                            "containers": [
+                                {
+                                    "args": [
+                                        "/mnt/models",
+                                        "--port=8080",
+                                        "--served-model-name=$(ISVC_NAME)",
+                                        "--distributed-executor-backend=mp",
+                                        "--tensor-parallel-size=$(TENSOR_PARALLEL_SIZE)",
+                                        "--pipeline-parallel-size=$(PIPELINE_PARALLEL_SIZE)",
+                                        "--nnodes=$(PIPELINE_PARALLEL_SIZE)",
+                                        "--master-addr=$(HEAD_SVC).$(POD_NAMESPACE).svc.cluster.local",
+                                        "--master-port=$(MASTER_PORT)",
+                                        "--headless"
+                                    ],
+                                    "command": [
+                                        "bash",
+                                        "-c",
+                                        "EXPECTED_WORKERS=$((PIPELINE_PARALLEL_SIZE - 1))\nNODE_RANK=\"\"\nfor i in $(seq 15); do\n  ALL_IPS=$(getent hosts ${WORKER_SVC} | awk '{print $1}' | sort -u)\n  NODE_RANK=$(echo \"$ALL_IPS\" | grep -nFx \"${POD_IP}\" | head -1 | cut -d: -f1)\n  [ \"$(echo \"$ALL_IPS\" | grep -c .)\" -ge \"$EXPECTED_WORKERS\" ] \u0026\u0026 [ -n \"$NODE_RANK\" ] \u0026\u0026 break\n  echo \"Waiting for workers, attempt ${i}/15...\"\n  sleep 2\ndone\n[ -z \"$NODE_RANK\" ] \u0026\u0026 echo \"Failed to resolve NODE_RANK\" \u0026\u0026 exit 1\necho \"NODE_RANK: $NODE_RANK\"\nexec vllm serve \"$@\" --node-rank=${NODE_RANK}\n",
+                                        "--"
+                                    ],
+                                    "env": [
+                                        {
+                                            "name": "HF_HOME",
+                                            "value": "/tmp/hf_home"
+                                        },
+                                        {
+                                            "name": "MASTER_PORT",
+                                            "value": "29500"
+                                        },
+                                        {
+                                            "name": "POD_NAME",
+                                            "valueFrom": {
+                                                "fieldRef": {
+                                                    "fieldPath": "metadata.name"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "POD_NAMESPACE",
+                                            "valueFrom": {
+                                                "fieldRef": {
+                                                    "fieldPath": "metadata.namespace"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "POD_IP",
+                                            "valueFrom": {
+                                                "fieldRef": {
+                                                    "fieldPath": "status.podIP"
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "image": "registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:c056e61672b6aea489ad5dde0bd2f8497230f5333e87f7cf6c494eba3bfdc808",
+                                    "livenessProbe": {
+                                        "exec": {
+                                            "command": [
+                                                "bash",
+                                                "-c",
+                                                "health_code=$(curl -s --max-time 5 -o /dev/null -w \"%{http_code}\" -X POST http://${HEAD_SVC}.${POD_NAMESPACE}.svc.cluster.local:8080/v1/completions \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"model\":\"'\"${ISVC_NAME}\"'\",\"prompt\":\"healthcheck\",\"max_tokens\":1}')\nif [[ \"${health_code}\" != \"200\" ]]; then\n  echo \"Unhealthy - inference check failed (HTTP ${health_code}).\"\n  exit 1\nfi\n"
+                                            ]
+                                        },
+                                        "failureThreshold": 3,
+                                        "periodSeconds": 30,
+                                        "successThreshold": 1,
+                                        "timeoutSeconds": 10
+                                    },
+                                    "name": "worker-container",
+                                    "readinessProbe": {
+                                        "exec": {
+                                            "command": [
+                                                "bash",
+                                                "-c",
+                                                "model_health_check=$(curl -s ${HEAD_SVC}.${POD_NAMESPACE}.svc.cluster.local:8080/v1/models | grep -q \"\\\"id\\\":\\\"${ISVC_NAME}\\\"\" \u0026\u0026 echo true || echo false)\nif [[ \"${model_health_check}\" == \"false\" ]]; then\n  echo \"Not Ready - vLLM Runtime Health Check failed.\"\n  exit 1\nfi\n"
+                                            ]
+                                        },
+                                        "failureThreshold": 2,
+                                        "periodSeconds": 5,
+                                        "successThreshold": 1,
+                                        "timeoutSeconds": 15
+                                    },
+                                    "resources": {
+                                        "limits": {
+                                            "cpu": "16",
+                                            "memory": "48Gi"
+                                        },
+                                        "requests": {
+                                            "cpu": "8",
+                                            "memory": "24Gi"
+                                        }
+                                    },
+                                    "startupProbe": {
+                                        "exec": {
+                                            "command": [
+                                                "bash",
+                                                "-c",
+                                                "model_health_check=$(curl -s ${HEAD_SVC}.${POD_NAMESPACE}.svc.cluster.local:8080/v1/models | grep -q \"\\\"id\\\":\\\"${ISVC_NAME}\\\"\" \u0026\u0026 echo true || echo false)\nif [[ \"${model_health_check}\" == \"false\" ]]; then\n  echo \"Unhealthy - vLLM Runtime Health Check failed.\"\n  exit 1\nfi\n"
+                                            ]
+                                        },
+                                        "failureThreshold": 120,
+                                        "initialDelaySeconds": 20,
+                                        "periodSeconds": 30,
+                                        "successThreshold": 1,
+                                        "timeoutSeconds": 30
+                                    },
+                                    "volumeMounts": [
+                                        {
+                                            "mountPath": "/dev/shm",
+                                            "name": "shm"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "pipelineParallelSize": 2,
+                            "tensorParallelSize": 1,
+                            "volumes": [
+                                {
+                                    "emptyDir": {
+                                        "medium": "Memory",
+                                        "sizeLimit": "12Gi"
+                                    },
+                                    "name": "shm"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "template.openshift.io/v1",
+            "kind": "Template",
+            "metadata": {
+                "annotations": {
+                    "description": "vLLM ServingRuntime to support ROCm (for AMD GPUs)",
+                    "internal.config.kubernetes.io/previousKinds": "Template",
+                    "internal.config.kubernetes.io/previousNames": "vllm-rocm-runtime-template",
+                    "internal.config.kubernetes.io/previousNamespaces": "opendatahub",
+                    "opendatahub.io/apiProtocol": "REST",
+                    "opendatahub.io/model-type": "[\"generative\"]",
+                    "opendatahub.io/modelServingSupport": "[\"single\"]",
+                    "openshift.io/display-name": "vLLM AMD GPU ServingRuntime for KServe",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "platform.opendatahub.io/instance.generation": "1",
+                    "platform.opendatahub.io/instance.name": "default-kserve",
+                    "platform.opendatahub.io/instance.uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4",
+                    "tags": "rhods,rhoai,kserve,servingruntime",
+                    "template.openshift.io/documentation-url": "https://github.com/opendatahub-io/vllm",
+                    "template.openshift.io/long-description": "This template defines resources needed to deploy vLLM AMD GPU ServingRuntime with KServe in Red Hat OpenShift AI"
+                },
+                "creationTimestamp": "2026-09-22T14:49:59Z",
+                "labels": {
+                    "app": "odh-dashboard",
+                    "app.kubernetes.io/part-of": "odh-dashboard",
+                    "opendatahub.io/dashboard": "true",
+                    "opendatahub.io/ootb": "true",
+                    "platform.opendatahub.io/part-of": "kserve"
+                },
+                "name": "vllm-rocm-runtime-template",
+                "namespace": "redhat-ods-applications",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "components.platform.opendatahub.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Kserve",
+                        "name": "default-kserve",
+                        "uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4"
+                    }
+                ],
+                "resourceVersion": "2759176",
+                "uid": "058b5a23-f3b7-4852-8f7d-d999631110c1"
+            },
+            "objects": [
+                {
+                    "apiVersion": "serving.kserve.io/v1alpha1",
+                    "kind": "ServingRuntime",
+                    "metadata": {
+                        "annotations": {
+                            "opendatahub.io/recommended-accelerators": "[\"amd.com/gpu\"]",
+                            "opendatahub.io/runtime-version": "v0.24.0",
+                            "openshift.io/display-name": "vLLM AMD GPU ServingRuntime for KServe"
+                        },
+                        "labels": {
+                            "opendatahub.io/dashboard": "true"
+                        },
+                        "name": "vllm-rocm-runtime"
+                    },
+                    "spec": {
+                        "annotations": {
+                            "opendatahub.io/kserve-runtime": "vllm",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080"
+                        },
+                        "containers": [
+                            {
+                                "args": [
+                                    "--port=8080",
+                                    "--model=/mnt/models",
+                                    "--served-model-name={{.Name}}"
+                                ],
+                                "command": [
+                                    "python",
+                                    "-m",
+                                    "vllm.entrypoints.openai.api_server"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "HF_HOME",
+                                        "value": "/tmp/hf_home"
+                                    }
+                                ],
+                                "image": "registry.redhat.io/rhaii/vllm-rocm-rhel9@sha256:77fc455bb762a877f79e41c66a30d8b9ec74b678306f898a9858ffc995e059d3",
+                                "name": "kserve-container",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ]
+                            }
+                        ],
+                        "multiModel": false,
+                        "supportedModelFormats": [
+                            {
+                                "autoSelect": true,
+                                "name": "vLLM"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "template.openshift.io/v1",
+            "kind": "Template",
+            "metadata": {
+                "annotations": {
+                    "description": "vLLM ServingRuntime to support IBM Spyre",
+                    "internal.config.kubernetes.io/previousKinds": "Template",
+                    "internal.config.kubernetes.io/previousNames": "vllm-spyre-ppc64le-runtime-template",
+                    "internal.config.kubernetes.io/previousNamespaces": "opendatahub",
+                    "opendatahub.io/apiProtocol": "REST",
+                    "opendatahub.io/model-type": "[\"generative\"]",
+                    "opendatahub.io/modelServingSupport": "[\"single\"]",
+                    "openshift.io/display-name": "vLLM Spyre ppc64le ServingRuntime for KServe",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "platform.opendatahub.io/instance.generation": "1",
+                    "platform.opendatahub.io/instance.name": "default-kserve",
+                    "platform.opendatahub.io/instance.uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4",
+                    "tags": "rhods,rhoai,kserve,servingruntime",
+                    "template.openshift.io/documentation-url": "https://github.com/vllm-project/vllm-spyre",
+                    "template.openshift.io/long-description": "This template defines resources needed to deploy vLLM Spyre AI Accelerator ServingRuntime with KServe in Red Hat OpenShift AI (ppc64le architecture only)"
+                },
+                "creationTimestamp": "2026-09-22T14:49:59Z",
+                "labels": {
+                    "app": "odh-dashboard",
+                    "app.kubernetes.io/part-of": "odh-dashboard",
+                    "opendatahub.io/dashboard": "true",
+                    "opendatahub.io/ootb": "true",
+                    "platform.opendatahub.io/part-of": "kserve"
+                },
+                "name": "vllm-spyre-ppc64le-runtime-template",
+                "namespace": "redhat-ods-applications",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "components.platform.opendatahub.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Kserve",
+                        "name": "default-kserve",
+                        "uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4"
+                    }
+                ],
+                "resourceVersion": "2759177",
+                "uid": "afa572c5-db84-4bf2-a76c-a5f8fcd207b7"
+            },
+            "objects": [
+                {
+                    "apiVersion": "serving.kserve.io/v1alpha1",
+                    "kind": "ServingRuntime",
+                    "metadata": {
+                        "annotations": {
+                            "opendatahub.io/recommended-accelerators": "[\"ibm.com/spyre_pf\"]",
+                            "opendatahub.io/runtime-version": "v0.24.0",
+                            "openshift.io/display-name": "vLLM Spyre ppc64le ServingRuntime for KServe"
+                        },
+                        "labels": {
+                            "opendatahub.io/dashboard": "true"
+                        },
+                        "name": "vllm-spyre-ppc64le-runtime"
+                    },
+                    "spec": {
+                        "annotations": {
+                            "opendatahub.io/kserve-runtime": "vllm",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080"
+                        },
+                        "containers": [
+                            {
+                                "args": [
+                                    "--model=/mnt/models",
+                                    "--port=8000",
+                                    "--served-model-name={{.Name}}"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "HF_HOME",
+                                        "value": "/tmp/hf_home"
+                                    }
+                                ],
+                                "image": "registry.redhat.io/rhaii/vllm-spyre-rhel9@sha256:4bfee184fabace5020cfb2d9fa8c581ecf3d69e07583a0f333ea518604d5fc74",
+                                "name": "kserve-container",
+                                "ports": [
+                                    {
+                                        "containerPort": 8000,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/dev/shm",
+                                        "name": "shm"
+                                    }
+                                ]
+                            }
+                        ],
+                        "multiModel": false,
+                        "schedulerName": "spyre-scheduler",
+                        "supportedModelFormats": [
+                            {
+                                "autoSelect": true,
+                                "name": "vLLM"
+                            }
+                        ],
+                        "volumes": [
+                            {
+                                "emptyDir": {
+                                    "medium": "Memory",
+                                    "sizeLimit": "2Gi"
+                                },
+                                "name": "shm"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "template.openshift.io/v1",
+            "kind": "Template",
+            "metadata": {
+                "annotations": {
+                    "description": "vLLM ServingRuntime to support IBM Spyre",
+                    "internal.config.kubernetes.io/previousKinds": "Template",
+                    "internal.config.kubernetes.io/previousNames": "vllm-spyre-s390x-runtime-template",
+                    "internal.config.kubernetes.io/previousNamespaces": "opendatahub",
+                    "opendatahub.io/apiProtocol": "REST",
+                    "opendatahub.io/model-type": "[\"generative\"]",
+                    "opendatahub.io/modelServingSupport": "[\"single\"]",
+                    "openshift.io/display-name": "vLLM Spyre s390x ServingRuntime for KServe",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "platform.opendatahub.io/instance.generation": "1",
+                    "platform.opendatahub.io/instance.name": "default-kserve",
+                    "platform.opendatahub.io/instance.uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4",
+                    "tags": "rhods,rhoai,kserve,servingruntime",
+                    "template.openshift.io/documentation-url": "https://github.com/vllm-project/vllm-spyre",
+                    "template.openshift.io/long-description": "This template defines resources needed to deploy vLLM Spyre AI Accelerator ServingRuntime with KServe in Red Hat OpenShift AI (s390x architecture only)"
+                },
+                "creationTimestamp": "2026-09-22T14:49:59Z",
+                "labels": {
+                    "app": "odh-dashboard",
+                    "app.kubernetes.io/part-of": "odh-dashboard",
+                    "opendatahub.io/dashboard": "true",
+                    "opendatahub.io/ootb": "true",
+                    "platform.opendatahub.io/part-of": "kserve"
+                },
+                "name": "vllm-spyre-s390x-runtime-template",
+                "namespace": "redhat-ods-applications",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "components.platform.opendatahub.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Kserve",
+                        "name": "default-kserve",
+                        "uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4"
+                    }
+                ],
+                "resourceVersion": "2759178",
+                "uid": "73bd24ee-c4d6-4817-b0f5-ba83054f0a10"
+            },
+            "objects": [
+                {
+                    "apiVersion": "serving.kserve.io/v1alpha1",
+                    "kind": "ServingRuntime",
+                    "metadata": {
+                        "annotations": {
+                            "opendatahub.io/recommended-accelerators": "[\"ibm.com/spyre_vf\"]",
+                            "opendatahub.io/runtime-version": "v0.24.0",
+                            "openshift.io/display-name": "vLLM Spyre s390x ServingRuntime for KServe"
+                        },
+                        "labels": {
+                            "opendatahub.io/dashboard": "true"
+                        },
+                        "name": "vllm-spyre-s390x-runtime"
+                    },
+                    "spec": {
+                        "annotations": {
+                            "opendatahub.io/kserve-runtime": "vllm",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080"
+                        },
+                        "containers": [
+                            {
+                                "args": [
+                                    "--model=/mnt/models",
+                                    "--port=8000",
+                                    "--served-model-name={{.Name}}"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "HF_HOME",
+                                        "value": "/tmp/hf_home"
+                                    },
+                                    {
+                                        "name": "FLEX_DEVICE",
+                                        "value": "VF"
+                                    },
+                                    {
+                                        "name": "TOKENIZERS_PARALLELISM",
+                                        "value": "false"
+                                    },
+                                    {
+                                        "name": "DTLOG_LEVEL",
+                                        "value": "error"
+                                    },
+                                    {
+                                        "name": "TORCH_SENDNN_LOG",
+                                        "value": "CRITICAL"
+                                    },
+                                    {
+                                        "name": "VLLM_SPYRE_USE_CB",
+                                        "value": "1"
+                                    },
+                                    {
+                                        "name": "VLLM_SPYRE_REQUIRE_PRECOMPILED_DECODERS",
+                                        "value": "1"
+                                    },
+                                    {
+                                        "name": "TORCH_SENDNN_CACHE_ENABLE",
+                                        "value": "1"
+                                    }
+                                ],
+                                "image": "registry.redhat.io/rhaii/vllm-spyre-rhel9@sha256:4bfee184fabace5020cfb2d9fa8c581ecf3d69e07583a0f333ea518604d5fc74",
+                                "name": "kserve-container",
+                                "ports": [
+                                    {
+                                        "containerPort": 8000,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/dev/shm",
+                                        "name": "shm"
+                                    }
+                                ]
+                            }
+                        ],
+                        "multiModel": false,
+                        "schedulerName": "spyre-scheduler",
+                        "supportedModelFormats": [
+                            {
+                                "autoSelect": true,
+                                "name": "vLLM"
+                            }
+                        ],
+                        "volumes": [
+                            {
+                                "emptyDir": {
+                                    "medium": "Memory",
+                                    "sizeLimit": "2Gi"
+                                },
+                                "name": "shm"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "template.openshift.io/v1",
+            "kind": "Template",
+            "metadata": {
+                "annotations": {
+                    "description": "vLLM ServingRuntime to support IBM Spyre",
+                    "internal.config.kubernetes.io/previousKinds": "Template",
+                    "internal.config.kubernetes.io/previousNames": "vllm-spyre-x86-runtime-template",
+                    "internal.config.kubernetes.io/previousNamespaces": "opendatahub",
+                    "opendatahub.io/apiProtocol": "REST",
+                    "opendatahub.io/model-type": "[\"generative\"]",
+                    "opendatahub.io/modelServingSupport": "[\"single\"]",
+                    "openshift.io/display-name": "vLLM Spyre on x86 ServingRuntime for KServe",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "platform.opendatahub.io/instance.generation": "1",
+                    "platform.opendatahub.io/instance.name": "default-kserve",
+                    "platform.opendatahub.io/instance.uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4",
+                    "tags": "rhods,rhoai,kserve,servingruntime",
+                    "template.openshift.io/documentation-url": "https://github.com/vllm-project/vllm-spyre",
+                    "template.openshift.io/long-description": "This template defines resources needed to deploy vLLM Spyre AI Accelerator ServingRuntime with KServe in Red Hat OpenShift AI (x86 architectures only)"
+                },
+                "creationTimestamp": "2026-09-22T14:49:59Z",
+                "labels": {
+                    "app": "odh-dashboard",
+                    "app.kubernetes.io/part-of": "odh-dashboard",
+                    "opendatahub.io/dashboard": "true",
+                    "opendatahub.io/ootb": "true",
+                    "platform.opendatahub.io/part-of": "kserve"
+                },
+                "name": "vllm-spyre-x86-runtime-template",
+                "namespace": "redhat-ods-applications",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "components.platform.opendatahub.io/v1alpha1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Kserve",
+                        "name": "default-kserve",
+                        "uid": "8b3bfcd8-b32e-4d8b-9caf-0a257e11ccb4"
+                    }
+                ],
+                "resourceVersion": "2759179",
+                "uid": "c965bbc0-c464-47d9-a4a4-de0a5b3dafa2"
+            },
+            "objects": [
+                {
+                    "apiVersion": "serving.kserve.io/v1alpha1",
+                    "kind": "ServingRuntime",
+                    "metadata": {
+                        "annotations": {
+                            "opendatahub.io/recommended-accelerators": "[\"ibm.com/spyre_pf\"]",
+                            "opendatahub.io/runtime-version": "v0.24.0",
+                            "openshift.io/display-name": "vLLM Spyre on x86 ServingRuntime for KServe"
+                        },
+                        "labels": {
+                            "opendatahub.io/dashboard": "true"
+                        },
+                        "name": "vllm-spyre-x86-runtime"
+                    },
+                    "spec": {
+                        "annotations": {
+                            "opendatahub.io/kserve-runtime": "vllm",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080"
+                        },
+                        "containers": [
+                            {
+                                "args": [
+                                    "--model=/mnt/models",
+                                    "--port=8000",
+                                    "--served-model-name={{.Name}}"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "HF_HOME",
+                                        "value": "/tmp/hf_home"
+                                    },
+                                    {
+                                        "name": "FLEX_COMPUTE",
+                                        "value": "SENTIENT"
+                                    },
+                                    {
+                                        "name": "FLEX_DEVICE",
+                                        "value": "PF"
+                                    },
+                                    {
+                                        "name": "TOKENIZERS_PARALLELISM",
+                                        "value": "false"
+                                    },
+                                    {
+                                        "name": "DTLOG_LEVEL",
+                                        "value": "error"
+                                    },
+                                    {
+                                        "name": "TORCH_SENDNN_LOG",
+                                        "value": "CRITICAL"
+                                    },
+                                    {
+                                        "name": "VLLM_SPYRE_WARMUP_BATCH_SIZES",
+                                        "value": "4"
+                                    },
+                                    {
+                                        "name": "VLLM_SPYRE_WARMUP_PROMPT_LENS",
+                                        "value": "1024"
+                                    },
+                                    {
+                                        "name": "VLLM_SPYRE_WARMUP_NEW_TOKENS",
+                                        "value": "256"
+                                    },
+                                    {
+                                        "name": "VLLM_SPYRE_REQUIRE_PRECOMPILED_DECODERS",
+                                        "value": "0"
+                                    }
+                                ],
+                                "image": "registry.redhat.io/rhaii/vllm-spyre-rhel9@sha256:4bfee184fabace5020cfb2d9fa8c581ecf3d69e07583a0f333ea518604d5fc74",
+                                "name": "kserve-container",
+                                "ports": [
+                                    {
+                                        "containerPort": 8000,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/opt/ibm/spyre/models",
+                                        "name": "spyre-cache"
+                                    }
+                                ]
+                            }
+                        ],
+                        "multiModel": false,
+                        "schedulerName": "spyre-scheduler",
+                        "supportedModelFormats": [
+                            {
+                                "autoSelect": true,
+                                "name": "vLLM"
+                            }
+                        ],
+                        "volumes": [
+                            {
+                                "emptyDir": {},
+                                "name": "spyre-cache"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

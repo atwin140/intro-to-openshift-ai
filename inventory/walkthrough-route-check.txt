@@ -1,0 +1,23 @@
+Anonymous model-list request: 401
+Authenticated model-list request: 200
+Model: command-helper
+Chat completion request: 200
+To list all evicted pods across all namespaces, you can use the following command:
+
+```sh
+kubectl get pods --all-namespaces -o json | jq '.items[] | select(.status.reason == "Evicted")'
+```
+
+This command uses `kubectl` to get all pods across all namespaces and then filters the JSON output using `jq` to show only those pods where the status reason is "Evicted".
+
+If you want to list evicted pods in a specific namespace, you can use:
+
+```sh
+kubectl get pods -n <namespace> -o json | jq '.items[] | select(.status.reason == "Evicted")'
+```
+
+Replace `<namespace>` with the name of the namespace you are interested in.
+
+These commands will help you identify and filter evicted pods based on their status reason.
+
+Transport check passed. Review the generated answer separately; no commands were executed.

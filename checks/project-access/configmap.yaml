@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: project-admin-handoff-check
+  namespace: intro-openshift-ai
+data:
+  purpose: Verify authenticated project-admin Kustomize access

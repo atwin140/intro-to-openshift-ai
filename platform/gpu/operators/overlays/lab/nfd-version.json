@@ -1,0 +1,12 @@
+{
+  "apiVersion": "operators.coreos.com/v1alpha1",
+  "kind": "Subscription",
+  "metadata": {
+    "name": "nfd",
+    "namespace": "openshift-nfd"
+  },
+  "spec": {
+    "channel": "stable",
+    "startingCSV": "nfd.4.22.0-202609151747"
+  }
+}

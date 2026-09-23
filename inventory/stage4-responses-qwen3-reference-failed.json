@@ -1,0 +1,160 @@
+{
+  "models": {
+    "object": "list",
+    "data": [
+      {
+        "id": "command-helper",
+        "object": "model",
+        "created": 1790096752,
+        "owned_by": "vllm",
+        "root": "/mnt/models",
+        "parent": null,
+        "max_model_len": 4096,
+        "permission": [
+          {
+            "id": "modelperm-8e3f48fca2e543e9",
+            "object": "model_permission",
+            "created": 1790096752,
+            "allow_create_engine": false,
+            "allow_sampling": true,
+            "allow_logprobs": true,
+            "allow_search_indices": false,
+            "allow_view": true,
+            "allow_fine_tuning": false,
+            "organization": "*",
+            "group": null,
+            "is_blocking": false
+          }
+        ]
+      }
+    ]
+  },
+  "results": [
+    {
+      "label": "evicted-single",
+      "seconds": 14.18,
+      "prompt": "How do I list all evicted pods?",
+      "response": {
+        "id": "chatcmpl-88a36a6a5bff9bbe",
+        "object": "chat.completion",
+        "created": 1790096752,
+        "model": "command-helper",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "You **cannot directly list all evicted pods** using a field selector on `status.reason` or `status.conditions.type` because:\n\n- The `status.reason` field is **not** a valid field selector in Kubernetes (it's not supported in `kubectl get pods` or `oc get pods`).\n- `status.conditions.type` is not available in pod field selectors.\n- Evicted pods are **not** marked with a `status.phase: Failed` or `status.reason: Evicted` in a way that can be filtered via `kubectl get pods` without additional processing.\n\n### What you *can* do:\n\n1. **List pods with `status.phase: Failed` and check their `status.reason`**  \n   This will show pods that failed, but **only a subset** of those may have been evicted. You must inspect the `status.reason` field manually.\n\n   ```bash\n   kubectl get pods -A -o json | jq -r '.[].status.phase | select(. == \"Failed\") | .metadata.namespace + \"/\" + .metadata.name + \" (reason: \\( .status.reason ))\"'\n   ```\n\n   > \u26a0\ufe0f This command only works if the pod has a `status.reason` field (which it does when it failed). However, **\"Evicted\" is not a common reason** \u2014 it's rare and usually only appears in node pressure scenarios.\n\n2. **Check for pods with `status.reason: Evicted` (if available)**  \n   You can filter the JSON output to find pods where `status.reason` is `\"Evicted\"`:\n\n   ```bash\n   kubectl get pods -A -o json | jq -r '.[].status.phase | select(. == \"Failed\") | .metadata.namespace + \"/\" + .metadata.name + \" (reason: \\( .status.reason ))\"' | grep \"Evicted\"\n   ```\n\n   > This will show only the pods that were evicted (if any), but **only if they are in the \"Failed\" phase and have a reason of \"Evicted\"**.\n\n3. **Important Notes:**\n   - A pod with `status.phase: Failed` and `status.reason: Evicted` **was evicted** due to node pressure (e.g., memory, disk, or CPU pressure).\n   - A pod with `status.phase: Failed` and `status.reason: OOMKilled` was killed due to out-of-memory \u2014 this is **not** node pressure eviction.\n   - Evicted pods are **not** automatically recreated \u2014 the controller may create a new one, but the original pod object is deleted.\n\n---\n\n### Summary\n\n\u274c You **cannot** list evicted pods with a simple `kubectl get pods` command.\n\n\u2705 To find evicted pods, you must:\n- Use `kubectl get pods -A -o json` to get full pod data.\n- Filter using `jq` or `grep` to find pods with:\n  - `status.phase: Failed`\n  - `status.reason: Evicted`\n\n> \ud83d\udd0d **Prerequisite**: You must have `jq` installed (or use a tool like `grep` with JSON parsing).\n\n> \ud83d\udea8 **Warning**: This is not a historical audit \u2014 it only shows current pod objects. If a pod was evicted and replaced, the original object is gone.\n\n---\n\nIf you want to **audit past evictions**, you would need to:\n- Use a **pod deletion or eviction logging system** (e.g., kubelet logs, node logs, or monitoring tools like Prometheus + Alertmanager).\n- Or use **custom controllers** or **audit logging** to track evictions.\n\nLet me know if you'd like help parsing kubelet logs or setting up monitoring for evictions.",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "length",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.24.0+rhaiv.13-839f12ea",
+        "usage": {
+          "prompt_tokens": 470,
+          "total_tokens": 1238,
+          "completion_tokens": 768,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    },
+    {
+      "label": "concurrent-evicted",
+      "seconds": 11.32,
+      "prompt": "How do I list all evicted pods?",
+      "response": {
+        "id": "chatcmpl-b994adcce52dec6a",
+        "object": "chat.completion",
+        "created": 1790096766,
+        "model": "command-helper",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "You **cannot directly list all evicted pods** using a field selector on `status.reason` or `status.conditions.type` because:\n\n- The `status.reason` field is **not** a valid field selector in Kubernetes (it's not supported in `kubectl get pods` or `oc get pods`).\n- `status.conditions.type` is not available in pod field selectors.\n- Evicted pods are **not** marked with a `status.phase: Failed` or `status.reason: Evicted` in a way that can be filtered via `kubectl get pods` without additional processing.\n\n### What you *can* do:\n\n1. **List pods with status `Failed` and reason `Evicted`** (via JSON parsing):\n   You can get a list of pods with `status.phase=Failed` and then filter for `status.reason=Evicted` using `kubectl get pods --field-selector=status.phase=Failed` and then parse the output with `jq` or `grep`.\n\n   ```bash\n   kubectl get pods --field-selector=status.phase=Failed -A | grep -i evicted\n   ```\n\n   > \u26a0\ufe0f This only shows pods that are in `Failed` phase and have `reason` containing \"evicted\" \u2014 but **this does not guarantee** the reason was `Evicted`. The `reason` field is not exposed in field selectors.\n\n2. **Get full pod status (to inspect manually)**:\n   To see the actual `status.reason`, you must retrieve the full pod object:\n\n   ```bash\n   kubectl get pods <pod-name> -n <namespace> -o json | jq -r '.status.reason'\n   ```\n\n   Then check if the value is `\"Evicted\"`.\n\n3. **Filter using `kubectl get pods` with `--field-selector` and `status.phase=Failed`**:\n   This will list only failed pods, which may include evicted ones:\n\n   ```bash\n   kubectl get pods --field-selector=status.phase=Failed -A\n   ```\n\n   Then inspect each pod's `status.reason` via `kubectl get pod <name> -o json`.\n\n---\n\n### Summary\n\n\u274c You **cannot** list all evicted pods with a single `kubectl get pods` command using field selectors.\n\n\u2705 You can:\n- List failed pods: `kubectl get pods --field-selector=status.phase=Failed -A`\n- Then inspect each one's `status.reason` to find those with `Evicted`\n\n> \ud83d\udd0d **Note**: A pod with `status.phase=Failed` and `status.reason=Evicted` was likely evicted due to node pressure (e.g., memory, disk, or CPU pressure). This is not the same as being killed by OOM (OOMKilled), which is a container-level termination.\n\nIf you need a script to automate this, let me know.",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.24.0+rhaiv.13-839f12ea",
+        "usage": {
+          "prompt_tokens": 470,
+          "total_tokens": 1058,
+          "completion_tokens": 588,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    },
+    {
+      "label": "concurrent-rollout",
+      "seconds": 13.46,
+      "prompt": "How do I check deployment rollout status and view logs in namespace demo? Include oc and kubectl examples.",
+      "response": {
+        "id": "chatcmpl-b5b8dd68d3a2c6aa",
+        "object": "chat.completion",
+        "created": 1790096766,
+        "model": "command-helper",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "To check the **deployment rollout status** and **view logs** in the `demo` namespace, you can use both `oc` (OpenShift CLI) and `kubectl` (Kubernetes CLI). Below are the relevant commands with explanations.\n\n---\n\n### \u2705 1. Check Deployment Rollout Status\n\n#### Using `oc` (OpenShift):\n```bash\noc get deploy -n demo\n```\nThis shows the current deployment status, including the number of replicas, available/ready replicas, and the current rollout state (e.g., `Ready`, `Progressing`, or `Failed`).\n\nTo see more detailed rollout information (like history, current revision, and rollout status), use:\n```bash\noc get deploy <deployment-name> -n demo -o yaml\n```\nOr for a more readable rollout status:\n```bash\noc rollout status deployment/<deployment-name> -n demo\n```\n> Replace `<deployment-name>` with the actual name of your deployment (e.g., `my-app`).\n\n#### Using `kubectl` (Kubernetes):\n```bash\nkubectl get deploy -n demo\n```\nSame as above \u2014 shows deployment status.\n\nFor detailed rollout status:\n```bash\nkubectl get deploy <deployment-name> -n demo -o yaml\n```\nOr:\n```bash\nkubectl rollout status deployment/<deployment-name> -n demo\n```\n\n> \u26a0\ufe0f Note: `rollout status` will wait until the deployment is fully rolled out (all replicas are ready) or fail if there's a problem.\n\n---\n\n### \u2705 2. View Logs from a Pod in the `demo` Namespace\n\n#### Using `oc`:\n```bash\noc logs <pod-name> -n demo\n```\nTo follow logs in real time:\n```bash\noc logs <pod-name> -n demo --follow\n```\n\n#### Using `kubectl`:\n```bash\nkubectl logs <pod-name> -n demo\n```\nTo follow logs:\n```bash\nkubectl logs <pod-name> -n demo --follow\n```\n\n> Replace `<pod-name>` with the actual name of the pod (e.g., `my-app-7f8d9c5b4c-abc123`).\n\n---\n\n### \ud83d\udd0d Tips\n\n- **Find the pod name** first if you don\u2019t know it:\n  ```bash\n  oc get pods -n demo\n  ```\n  or\n  ```bash\n  kubectl get pods -n demo\n  ```\n\n- **Rollout status** indicates whether the deployment is progressing or has failed. If it fails, it may show `Error`, `Failed`, or `Progressing` with a reason.\n\n- **Logs** help debug issues in the application. If a pod is crashing, logs will show the error.\n\n---\n\n### \ud83d\udea8 Important Notes\n\n- `oc` and `kubectl` behave similarly, but `oc` has additional OpenShift-specific features (e.g., built-in support for routes, builds, and operators).\n- The `rollout status` command **waits** until the deployment is ready \u2014 it does not return immediately.\n- If a deployment is stuck or failing, check the **pod status**, **events**, and **deployment history**:\n  ```bash\n  oc get events -n demo\n  ```\n\n---\n\nLet me know if you'd like to check rollout history, view deployment history, or troubleshoot a failed rollout.",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.24.0+rhaiv.13-839f12ea",
+        "usage": {
+          "prompt_tokens": 482,
+          "total_tokens": 1187,
+          "completion_tokens": 705,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    }
+  ]
+}

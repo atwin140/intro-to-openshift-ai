@@ -1,0 +1,287 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "k8s.ovn.org/pod-networks": "{\"default\":{\"ip_addresses\":[\"10.131.0.60/23\"],\"mac_address\":\"0a:58:0a:83:00:3c\",\"gateway_ips\":[\"10.131.0.1\"],\"routes\":[{\"dest\":\"10.128.0.0/14\",\"nextHop\":\"10.131.0.1\"},{\"dest\":\"172.30.0.0/16\",\"nextHop\":\"10.131.0.1\"},{\"dest\":\"169.254.0.5/32\",\"nextHop\":\"10.131.0.1\"},{\"dest\":\"100.64.0.0/16\",\"nextHop\":\"10.131.0.1\"}],\"ip_address\":\"10.131.0.60/23\",\"gateway_ip\":\"10.131.0.1\",\"role\":\"primary\"}}",
+                    "k8s.v1.cni.cncf.io/network-status": "[{\n    \"name\": \"ovn-kubernetes\",\n    \"interface\": \"eth0\",\n    \"ips\": [\n        \"10.131.0.60\"\n    ],\n    \"mac\": \"0a:58:0a:83:00:3c\",\n    \"default\": true,\n    \"dns\": {}\n}]",
+                    "openshift.io/scc": "restricted-v2",
+                    "seccomp.security.alpha.kubernetes.io/pod": "runtime/default",
+                    "security.openshift.io/validated-scc-subject-type": "user"
+                },
+                "creationTimestamp": "2026-09-22T16:56:48Z",
+                "generateName": "download-qwen3-4b-",
+                "generation": 1,
+                "labels": {
+                    "app": "model-download",
+                    "batch.kubernetes.io/controller-uid": "14b603ba-3ea2-48b8-a36e-6aa75e2421ee",
+                    "batch.kubernetes.io/job-name": "download-qwen3-4b",
+                    "controller-uid": "14b603ba-3ea2-48b8-a36e-6aa75e2421ee",
+                    "job-name": "download-qwen3-4b"
+                },
+                "name": "download-qwen3-4b-7qx46",
+                "namespace": "intro-openshift-ai",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "batch/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Job",
+                        "name": "download-qwen3-4b",
+                        "uid": "14b603ba-3ea2-48b8-a36e-6aa75e2421ee"
+                    }
+                ],
+                "resourceVersion": "2855355",
+                "uid": "f7cfccf8-8287-445f-84db-405ccb410480"
+            },
+            "spec": {
+                "automountServiceAccountToken": false,
+                "containers": [
+                    {
+                        "command": [
+                            "python",
+                            "/scripts/download.py"
+                        ],
+                        "env": [
+                            {
+                                "name": "HF_HOME",
+                                "value": "/tmp/hf-home"
+                            },
+                            {
+                                "name": "HF_HUB_DISABLE_IMPLICIT_TOKEN",
+                                "value": "1"
+                            },
+                            {
+                                "name": "HF_HUB_OFFLINE",
+                                "value": "0"
+                            },
+                            {
+                                "name": "TRANSFORMERS_OFFLINE",
+                                "value": "0"
+                            }
+                        ],
+                        "image": "registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:c056e61672b6aea489ad5dde0bd2f8497230f5333e87f7cf6c494eba3bfdc808",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "download",
+                        "resources": {
+                            "limits": {
+                                "cpu": "2",
+                                "memory": "4Gi"
+                            },
+                            "requests": {
+                                "cpu": "1",
+                                "memory": "2Gi"
+                            }
+                        },
+                        "securityContext": {
+                            "allowPrivilegeEscalation": false,
+                            "capabilities": {
+                                "drop": [
+                                    "ALL"
+                                ]
+                            },
+                            "runAsNonRoot": true,
+                            "runAsUser": 1000880000,
+                            "seccompProfile": {
+                                "type": "RuntimeDefault"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/models",
+                                "name": "models"
+                            },
+                            {
+                                "mountPath": "/scripts",
+                                "name": "script",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "gpu-node-01",
+                "nodeSelector": {
+                    "kubernetes.io/hostname": "gpu-node-01"
+                },
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {
+                    "fsGroup": 1000880000,
+                    "fsGroupChangePolicy": "OnRootMismatch",
+                    "runAsNonRoot": true,
+                    "seLinuxOptions": {
+                        "level": "s0:c30,c5"
+                    },
+                    "seccompProfile": {
+                        "type": "RuntimeDefault"
+                    }
+                },
+                "serviceAccount": "model-server",
+                "serviceAccountName": "model-server",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/memory-pressure",
+                        "operator": "Exists"
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "models",
+                        "persistentVolumeClaim": {
+                            "claimName": "model-cache"
+                        }
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "model-download-script-cg6b982m8b"
+                        },
+                        "name": "script"
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-22T16:58:52Z",
+                        "observedGeneration": 1,
+                        "status": "False",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-22T16:56:48Z",
+                        "observedGeneration": 1,
+                        "reason": "PodCompleted",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-22T16:58:51Z",
+                        "observedGeneration": 1,
+                        "reason": "PodCompleted",
+                        "status": "False",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-22T16:58:51Z",
+                        "observedGeneration": 1,
+                        "reason": "PodCompleted",
+                        "status": "False",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-22T16:56:48Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "1",
+                            "memory": "2Gi"
+                        },
+                        "containerID": "cri-o://fcdf6adbaa4ba007f367dae7f94e6004b278de0ddd195556d31bf1d0c9ff726e",
+                        "image": "registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:c056e61672b6aea489ad5dde0bd2f8497230f5333e87f7cf6c494eba3bfdc808",
+                        "imageID": "registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:82b6b3afd769ef6fbbef6a914ca49fc077835c2b94bf43c7d5f353e1c09234ff",
+                        "lastState": {},
+                        "name": "download",
+                        "ready": false,
+                        "resources": {
+                            "limits": {
+                                "cpu": "2",
+                                "memory": "4Gi"
+                            },
+                            "requests": {
+                                "cpu": "1",
+                                "memory": "2Gi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": false,
+                        "state": {
+                            "terminated": {
+                                "containerID": "cri-o://fcdf6adbaa4ba007f367dae7f94e6004b278de0ddd195556d31bf1d0c9ff726e",
+                                "exitCode": 0,
+                                "finishedAt": "2026-09-22T16:58:50Z",
+                                "reason": "Completed",
+                                "startedAt": "2026-09-22T16:57:09Z"
+                            }
+                        },
+                        "user": {
+                            "linux": {
+                                "gid": 0,
+                                "supplementalGroups": [
+                                    0,
+                                    1000880000
+                                ],
+                                "uid": 1000880000
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/models",
+                                "name": "models"
+                            },
+                            {
+                                "mountPath": "/scripts",
+                                "name": "script",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.15.229",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.15.229"
+                    }
+                ],
+                "observedGeneration": 1,
+                "phase": "Succeeded",
+                "podIP": "10.131.0.60",
+                "podIPs": [
+                    {
+                        "ip": "10.131.0.60"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2026-09-22T16:56:48Z"
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

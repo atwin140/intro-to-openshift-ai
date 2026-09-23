@@ -1,0 +1,40 @@
+{
+    "apiVersion": "opendatahub.io/v1alpha",
+    "kind": "OdhDashboardConfig",
+    "metadata": {
+        "annotations": {
+            "internal.config.kubernetes.io/previousKinds": "OdhDashboardConfig",
+            "internal.config.kubernetes.io/previousNames": "odh-dashboard-config",
+            "internal.config.kubernetes.io/previousNamespaces": "default",
+            "platform.opendatahub.io/instance.generation": "1",
+            "platform.opendatahub.io/instance.name": "default-dashboard",
+            "platform.opendatahub.io/instance.uid": "59f51e12-8c2a-4f2c-a38c-a2fdd7df0888",
+            "platform.opendatahub.io/type": "OpenShift AI Self-Managed"
+        },
+        "creationTimestamp": "2026-09-22T14:49:02Z",
+        "generation": 1,
+        "labels": {
+            "app": "rhods-dashboard",
+            "app.kubernetes.io/part-of": "rhods-dashboard",
+            "app.opendatahub.io/rhods-dashboard": "true",
+            "platform.opendatahub.io/part-of": "dashboard"
+        },
+        "name": "odh-dashboard-config",
+        "namespace": "redhat-ods-applications",
+        "resourceVersion": "2757966",
+        "uid": "759e0ac2-7831-4e21-9475-e2d0e3fa2a93"
+    },
+    "spec": {
+        "dashboardConfig": {
+            "disableTracking": false
+        },
+        "hardwareProfileOrder": [],
+        "notebookController": {
+            "enabled": true,
+            "notebookNamespace": "rhods-notebooks",
+            "pvcSize": "20Gi"
+        },
+        "templateDisablement": [],
+        "templateOrder": []
+    }
+}

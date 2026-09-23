@@ -1,0 +1,15 @@
+{
+  "apiVersion": "nvidia.com/v1",
+  "kind": "ClusterPolicy",
+  "metadata": {
+    "name": "gpu-cluster-policy"
+  },
+  "spec": {
+    "driver": {
+      "kernelModuleType": "open",
+      "repository": "nvcr.io/nvidia",
+      "image": "driver",
+      "version": "sha256:e243d778bd83de47668e7629d78f673317a130fedc99941be12aad7fc6bdfa85"
+    }
+  }
+}

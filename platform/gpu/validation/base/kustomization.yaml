@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - 00-namespace.json
+  - 01-serviceaccount.json
+  - 02-job.json
+  - 03-job.json

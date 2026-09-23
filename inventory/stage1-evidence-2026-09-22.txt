@@ -1,0 +1,49 @@
+
+$ oc get csv -n openshift-nfd -l !olm.copiedFrom
+NAME                      DISPLAY                           VERSION               RELEASE   REPLACES   PHASE
+nfd.4.22.0-202609151747   Node Feature Discovery Operator   4.22.0-202609151747                        Succeeded
+
+$ oc get csv -n nvidia-gpu-operator -l !olm.copiedFrom
+NAME                             DISPLAY               VERSION   RELEASE   REPLACES                         PHASE
+gpu-operator-certified.v26.7.0   NVIDIA GPU Operator   26.7.0              gpu-operator-certified.v26.3.3   Succeeded
+
+$ oc get jobs,pods -n intro-ai-gpu-checks -o wide
+NAME                          STATUS     COMPLETIONS   DURATION   AGE   CONTAINERS   IMAGES                                                                                                   SELECTOR
+job.batch/cuda-vectoradd-01   Complete   1/1           12s        44s   vectoradd    nvcr.io/nvidia/k8s/cuda-sample@sha256:86c8ab90b657bc74098f068e670d2635799f1fd3695a0dd55fd696d8f9e3d64b   batch.kubernetes.io/controller-uid=4b00d177-1df3-40d1-9e6c-b43d185eceb0
+job.batch/cuda-vectoradd-02   Complete   1/1           8s         44s   vectoradd    nvcr.io/nvidia/k8s/cuda-sample@sha256:86c8ab90b657bc74098f068e670d2635799f1fd3695a0dd55fd696d8f9e3d64b   batch.kubernetes.io/controller-uid=f85b4c70-08be-4909-94ea-ac774fbc7585
+
+NAME                          READY   STATUS      RESTARTS   AGE   IP            NODE          NOMINATED NODE   READINESS GATES
+pod/cuda-vectoradd-01-4fzhq   0/1     Completed   0          44s   10.131.0.56   gpu-node-01   <none>           <none>
+pod/cuda-vectoradd-02-q5b7b   0/1     Completed   0          44s   10.128.2.25   gpu-node-02   <none>           <none>
+
+$ oc logs -n intro-ai-gpu-checks job/cuda-vectoradd-01
+[Vector addition of 50000 elements]
+Copy input data from the host memory to the CUDA device
+CUDA kernel launch with 196 blocks of 256 threads
+Copy output data from the CUDA device to the host memory
+Test PASSED
+Done
+
+$ oc logs -n intro-ai-gpu-checks job/cuda-vectoradd-02
+[Vector addition of 50000 elements]
+Copy input data from the host memory to the CUDA device
+CUDA kernel launch with 196 blocks of 256 threads
+Copy output data from the CUDA device to the host memory
+Test PASSED
+Done
+
+$ oc exec -n nvidia-gpu-operator nvidia-driver-daemonset-9.8.20260901-0-k2hjj -c nvidia-driver-ctr -- nvidia-smi --query-gpu=name,uuid,pci.bus_id,memory.total,memory.used,driver_version --format=csv
+name, uuid, pci.bus_id, memory.total [MiB], memory.used [MiB], driver_version
+NVIDIA GeForce RTX 4070, GPU-b30af0f0-628e-64d3-d1ce-6f19803e7146, 00000000:06:10.0, 12282 MiB, 1 MiB, 595.91.07
+
+$ oc exec -n nvidia-gpu-operator nvidia-driver-daemonset-9.8.20260901-0-k2hjj -c nvidia-driver-ctr -- cat /proc/driver/nvidia/version
+NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  595.91.07  Release Build  (dvs-builder@U22-I3-B08-02-2)  Wed Jul 29 03:01:16 UTC 2026
+GCC version:  gcc version 11.5.0 20240719 (Red Hat 11.5.0-14) (GCC) 
+
+$ oc exec -n nvidia-gpu-operator nvidia-driver-daemonset-9.8.20260901-0-swtrt -c nvidia-driver-ctr -- nvidia-smi --query-gpu=name,uuid,pci.bus_id,memory.total,memory.used,driver_version --format=csv
+name, uuid, pci.bus_id, memory.total [MiB], memory.used [MiB], driver_version
+NVIDIA GeForce RTX 4070, GPU-f482f14b-15cf-5f03-42eb-4f6aca06f126, 00000000:06:10.0, 12282 MiB, 1 MiB, 595.91.07
+
+$ oc exec -n nvidia-gpu-operator nvidia-driver-daemonset-9.8.20260901-0-swtrt -c nvidia-driver-ctr -- cat /proc/driver/nvidia/version
+NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  595.91.07  Release Build  (dvs-builder@U22-I3-B08-02-2)  Wed Jul 29 03:01:16 UTC 2026
+GCC version:  gcc version 11.5.0 20240719 (Red Hat 11.5.0-14) (GCC) 

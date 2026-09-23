@@ -1,0 +1,51 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "cuda-vectoradd-02",
+    "namespace": "intro-ai-gpu-checks"
+  },
+  "spec": {
+    "backoffLimit": 0,
+    "activeDeadlineSeconds": 300,
+    "template": {
+      "spec": {
+        "serviceAccountName": "gpu-check",
+        "automountServiceAccountToken": false,
+        "restartPolicy": "Never",
+        "securityContext": {
+          "runAsNonRoot": true,
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "vectoradd",
+            "image": "nvcr.io/nvidia/k8s/cuda-sample:vectoradd-cuda12.5.0-ubi8",
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "100m",
+                "memory": "128Mi",
+                "nvidia.com/gpu": 1
+              },
+              "limits": {
+                "cpu": "1",
+                "memory": "256Mi",
+                "nvidia.com/gpu": 1
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

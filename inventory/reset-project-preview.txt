@@ -1,0 +1,13 @@
+Context: intro-openshift-ai/api-eqip-sharkbait-tech:6443/darleya
+API: https://api.eqip.sharkbait.tech:6443
+Cluster ID: e0cee1da-a7d0-4662-9c1b-c9a8cd7eaac8
+Stage: project; mode: PREVIEW (read-only)
+WARNING: ALL content in intro-openshift-ai will be deleted, including user additions and Secrets.
+Volume: image-model-cache -> pvc-256ed23b-24b0-4d92-a200-ec98c88a06ee, reclaim=Delete
+Volume: model-cache -> pvc-ad82359b-bfb5-4381-b270-c544f97b1c9b, reclaim=Delete
+Delete: inferenceservices.serving.kserve.io/command-helper in intro-openshift-ai
+Delete: inferenceservices.serving.kserve.io/image-generator in intro-openshift-ai
+Delete: namespace/intro-openshift-ai
+Delete: clusterrolebinding/intro-openshift-ai-model-server-auth-delegator
+Checkpoint: project content removed when executed; verify storage backend and fresh project setup.
+Preview finished. Nothing changed.

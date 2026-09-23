@@ -1,0 +1,160 @@
+{
+  "models": {
+    "object": "list",
+    "data": [
+      {
+        "id": "command-helper",
+        "object": "model",
+        "created": 1790096662,
+        "owned_by": "vllm",
+        "root": "/mnt/models",
+        "parent": null,
+        "max_model_len": 4096,
+        "permission": [
+          {
+            "id": "modelperm-8d783e5b6a906ef8",
+            "object": "model_permission",
+            "created": 1790096662,
+            "allow_create_engine": false,
+            "allow_sampling": true,
+            "allow_logprobs": true,
+            "allow_search_indices": false,
+            "allow_view": true,
+            "allow_fine_tuning": false,
+            "organization": "*",
+            "group": null,
+            "is_blocking": false
+          }
+        ]
+      }
+    ]
+  },
+  "results": [
+    {
+      "label": "evicted-single",
+      "seconds": 11.76,
+      "prompt": "How do I list all evicted pods?",
+      "response": {
+        "id": "chatcmpl-b7a7ba8c3a20748a",
+        "object": "chat.completion",
+        "created": 1790096662,
+        "model": "command-helper",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "To list all evicted pods in OpenShift or Kubernetes, you need to understand that **evicted pods are not directly exposed in standard pod listings**. Instead, evictions are typically recorded in the **Node's eviction events** or in the **Pod's status**, and they are often tied to node resource pressure (e.g., memory, CPU).\n\n### Key Points:\n- Kubernetes/OpenShift does **not** have a direct `evicted` label or status field in the `pod` list.\n- Evicted pods are usually **restarted or rescheduled** after eviction.\n- You can check for evictions by:\n  1. Looking at **node events** (which may indicate evictions).\n  2. Checking **pod status** for `Evicted` condition.\n  3. Using `kubectl get pods -A` and filtering for pods with `Evicted` status.\n\n---\n\n### \u2705 Command to List Pods with Evicted Status:\n\n```bash\nkubectl get pods -A --field-selector status.phase=Failed --field-selector status.conditions.type=Evicted\n```\n\n> \u26a0\ufe0f This command is **not reliable** because `status.phase=Failed` and `Evicted` condition are not always present or correctly set.\n\n---\n\n### \u2705 Better: Check for Pods with `Evicted` Condition\n\n```bash\nkubectl get pods -A -o jsonpath='{range .items[*]}{.metadata.name}{\"\\n\"}{.status.conditions[?(@.type==\"Evicted\")]}{\"\\n\"}{end}' | grep -i evicted\n```\n\n> This will show pod names and their `Evicted` condition if present.\n\n---\n\n### \u2705 Best Practice: Check Node Events for Evictions\n\nEvictions are often logged in **node events**:\n\n```bash\nkubectl get events --field-selector involvedObject.kind=Node -A\n```\n\nLook for events like:\n- `Evicted`\n- `Eviction`\n- `Node evicted pod`\n\nThis is the **most reliable way** to detect evictions.\n\n---\n\n### OpenShift Specific Notes:\n- In OpenShift, you can also use `oc`:\n  ```bash\n  oc get events --field-selector involvedObject.kind=Node\n  ```\n- OpenShift may have additional eviction policies or monitoring via the **Cluster Operator** (e.g., Node, Machine, etc.).\n\n---\n\n### Summary:\nThere is **no direct \"list all evicted pods\"** command. Instead:\n\n| Method | Use Case |\n|-------|---------|\n| `kubectl get pods -A --field-selector status.conditions.type=Evicted` | Check if a pod has an `Evicted` condition |\n| `kubectl get events --field-selector involvedObject.kind=Node` | Best way to detect evictions (most reliable) |\n\n> \ud83d\udd0d **Note**: Evicted pods are usually transient \u2014 they are removed from the node and rescheduled. If you're seeing evictions, investigate node resource pressure (CPU, memory, disk), node taints, or resource limits.\n\nLet me know if you want help analyzing node events or checking resource pressure.",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.24.0+rhaiv.13-839f12ea",
+        "usage": {
+          "prompt_tokens": 177,
+          "total_tokens": 819,
+          "completion_tokens": 642,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    },
+    {
+      "label": "concurrent-evicted",
+      "seconds": 12.01,
+      "prompt": "How do I list all evicted pods?",
+      "response": {
+        "id": "chatcmpl-9bdd8b185d90c196",
+        "object": "chat.completion",
+        "created": 1790096674,
+        "model": "command-helper",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "To list all evicted pods in OpenShift or Kubernetes, you need to understand that **evicted pods are not directly exposed in standard pod listings**. Instead, evictions are typically recorded in the **Node's eviction events** or in the **Pod's status** if the eviction was triggered by a node condition.\n\nHowever, you can **identify pods that were evicted** by checking:\n\n1. **Pod events** (which may include \"Evicted\" messages)\n2. **Node conditions** (e.g., `NodeHasSufficientMemory`, `NodeHasSufficientDisk`, etc.)\n3. **Pod status** (if the pod is in a `Failed` or `Unknown` state due to eviction)\n\n---\n\n### \u2705 Recommended Command: List pods with eviction-related events\n\n```bash\noc get pods --all-namespaces -o jsonpath='{range .items[*]}{.metadata.name}{\"\\n\"}{.status.phase}{\"\\n\"}{.status.conditions[?(@.type==\"Evicted\")].reason}{\"\\n\"}{.status.conditions[?(@.type==\"Evicted\")].message}{\"\\n\"}{end}'\n```\n\n> \u26a0\ufe0f This command will only show pods that have an `Evicted` condition. It's not a direct list of all evicted pods, but it will show which ones were evicted and why.\n\n---\n\n### \ud83d\udd0d Alternative: Check pod events for \"Evicted\"\n\n```bash\noc get events --all-namespaces | grep -i \"evicted\"\n```\n\nThis will show all events across namespaces that mention \"evicted\", including the pod name, namespace, and reason.\n\n---\n\n### \ud83d\udcdd Notes:\n- Evicted pods are usually **restarted automatically** by the kubelet if the node recovers.\n- If a pod is evicted due to **resource pressure** (e.g., memory), the event will include a reason like `Killed`, `OOMKilled`, or `NodeHasSufficientMemory`.\n- You **cannot list \"all evicted pods\"** in a single static list because evictions are transient and may have been cleaned up.\n\n---\n\n### \ud83d\udea8 Warning:\nDo **not** assume that a pod in `Failed` or `Unknown` state is evicted \u2014 it could be due to other reasons (e.g., network issues, image pull failures).\n\n---\n\n### Summary:\nTo find evicted pods:\n```bash\noc get events --all-namespaces | grep -i \"evicted\"\n```\n\nOr to see pod-level eviction conditions:\n```bash\noc get pods --all-namespaces -o jsonpath='{range .items[*]}{.metadata.name}{\"\\n\"}{.status.conditions[?(@.type==\"Evicted\")].reason}{\"\\n\"}{end}'\n```\n\n> \ud83d\udd0d These commands are safe and non-destructive. They only retrieve logs and status \u2014 no actions are taken.\n\nLet me know if you want to filter by reason (e.g., OOMKilled) or check node conditions.",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.24.0+rhaiv.13-839f12ea",
+        "usage": {
+          "prompt_tokens": 177,
+          "total_tokens": 808,
+          "completion_tokens": 631,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    },
+    {
+      "label": "concurrent-rollout",
+      "seconds": 11.27,
+      "prompt": "How do I check deployment rollout status and view logs in namespace demo? Include oc and kubectl examples.",
+      "response": {
+        "id": "chatcmpl-aa6683405115687c",
+        "object": "chat.completion",
+        "created": 1790096674,
+        "model": "command-helper",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "To check the **deployment rollout status** and **view logs** in the `demo` namespace, you can use both `oc` (OpenShift CLI) and `kubectl` (Kubernetes CLI). Below are the relevant commands with explanations.\n\n---\n\n### \u2705 1. Check Deployment Rollout Status in Namespace `demo`\n\n#### Using `oc` (OpenShift CLI):\n```bash\noc get deploy -n demo\n```\nThis shows the deployment resources in the `demo` namespace.\n\nTo see the rollout status (e.g., desired, current, updated replicas, and status):\n```bash\noc get deploy -n demo -o wide\n```\n\nTo check the rollout status in detail (including history and current state):\n```bash\noc rollout status deployment/<deployment-name> -n demo\n```\n> Replace `<deployment-name>` with the actual name (e.g., `my-app`).\n\n#### Using `kubectl`:\n```bash\nkubectl get deploy -n demo\n```\n```bash\nkubectl get deploy -n demo -o wide\n```\n```bash\nkubectl rollout status deployment/<deployment-name> -n demo\n```\n\n> Replace `<deployment-name>` with the actual deployment name.\n\n---\n\n### \u2705 2. View Logs from a Pod in Namespace `demo`\n\n#### Using `oc`:\n```bash\noc logs <pod-name> -n demo\n```\n> Replace `<pod-name>` with the actual pod name.\n\nTo follow logs in real time:\n```bash\noc logs -f <pod-name> -n demo\n```\n\n#### Using `kubectl`:\n```bash\nkubectl logs <pod-name> -n demo\n```\n```bash\nkubectl logs -f <pod-name> -n demo\n```\n\n> Replace `<pod-name>` with the actual pod name.\n\n---\n\n### \ud83d\udd0d Notes:\n- Ensure you have proper permissions to view deployments and pods in the `demo` namespace.\n- The rollout status command will wait until the deployment is fully updated (all replicas are ready).\n- If the deployment has a `revisionHistoryLimit`, old revisions may be cleaned up after a certain time.\n\n---\n\n### Example (Full Workflow):\n```bash\n# Check deployment\noc get deploy -n demo\n\n# Check rollout status\noc rollout status deployment/my-app -n demo\n\n# View logs of a pod\noc logs my-app-7f8d9c5b4-x1234 -n demo\n```\n\n> Replace `my-app` and `my-app-7f8d9c5b4-x1234` with actual names.\n\n---\n\n\u26a0\ufe0f **Warning**:  \nThe `rollout status` command may take time if the rollout is slow or if there are errors. If it times out, check the pod status or logs for issues.\n\nLet me know if you want to check rollout history or get pod status too!",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.24.0+rhaiv.13-839f12ea",
+        "usage": {
+          "prompt_tokens": 189,
+          "total_tokens": 781,
+          "completion_tokens": 592,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,337 @@
+{
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": {
+        "annotations": {
+            "deployment.kubernetes.io/revision": "3",
+            "internal.serving.kserve.io/storage-initializer-sourceuri": "pvc://model-cache/qwen-coder-7b",
+            "opendatahub.io/kserve-runtime": "vllm",
+            "openshift.io/display-name": "Command helper — Qwen2.5 Coder 7B AWQ",
+            "prometheus.io/path": "/metrics",
+            "prometheus.io/port": "8080",
+            "security.opendatahub.io/enable-auth": "false",
+            "service.beta.openshift.io/serving-cert-secret-name": "command-helper-predictor-serving-cert",
+            "serving.kserve.io/autoscalerClass": "external",
+            "serving.kserve.io/deploymentMode": "Standard"
+        },
+        "creationTimestamp": "2026-09-22T16:59:02Z",
+        "generation": 4,
+        "labels": {
+            "app": "isvc.command-helper-predictor",
+            "component": "predictor",
+            "opendatahub.io/dashboard": "true",
+            "serving.kserve.io/inferenceservice": "command-helper"
+        },
+        "name": "command-helper-predictor",
+        "namespace": "intro-openshift-ai",
+        "ownerReferences": [
+            {
+                "apiVersion": "serving.kserve.io/v1beta1",
+                "blockOwnerDeletion": true,
+                "controller": true,
+                "kind": "InferenceService",
+                "name": "command-helper",
+                "uid": "bed9aa15-4457-4ff2-b201-6ef1d234445d"
+            }
+        ],
+        "resourceVersion": "2866831",
+        "uid": "bb6eadf5-441b-4999-9756-580f99bc9a64"
+    },
+    "spec": {
+        "progressDeadlineSeconds": 600,
+        "replicas": 1,
+        "revisionHistoryLimit": 10,
+        "selector": {
+            "matchLabels": {
+                "app": "isvc.command-helper-predictor"
+            }
+        },
+        "strategy": {
+            "type": "Recreate"
+        },
+        "template": {
+            "metadata": {
+                "annotations": {
+                    "internal.serving.kserve.io/storage-initializer-sourceuri": "pvc://model-cache/qwen-coder-7b",
+                    "opendatahub.io/kserve-runtime": "vllm",
+                    "openshift.io/display-name": "Command helper — Qwen2.5 Coder 7B AWQ",
+                    "prometheus.io/path": "/metrics",
+                    "prometheus.io/port": "8080",
+                    "security.opendatahub.io/enable-auth": "false",
+                    "service.beta.openshift.io/serving-cert-secret-name": "command-helper-predictor-serving-cert",
+                    "serving.kserve.io/autoscalerClass": "external",
+                    "serving.kserve.io/deploymentMode": "Standard"
+                },
+                "labels": {
+                    "app": "isvc.command-helper-predictor",
+                    "component": "predictor",
+                    "opendatahub.io/dashboard": "true",
+                    "serving.kserve.io/inferenceservice": "command-helper"
+                },
+                "name": "command-helper-predictor",
+                "namespace": "intro-openshift-ai"
+            },
+            "spec": {
+                "automountServiceAccountToken": true,
+                "containers": [
+                    {
+                        "args": [
+                            "--port=8080",
+                            "--model=/mnt/models",
+                            "--served-model-name=command-helper",
+                            "--dtype=float16",
+                            "--max-model-len=4096",
+                            "--max-num-seqs=2",
+                            "--max-num-batched-tokens=4096",
+                            "--gpu-memory-utilization=0.90",
+                            "--enforce-eager",
+                            "--generation-config=vllm",
+                            "--override-generation-config={\"max_new_tokens\":768}",
+                            "--quantization=awq"
+                        ],
+                        "command": [
+                            "python",
+                            "-m",
+                            "vllm.entrypoints.openai.api_server"
+                        ],
+                        "env": [
+                            {
+                                "name": "HF_HOME",
+                                "value": "/tmp/hf_home"
+                            },
+                            {
+                                "name": "HF_HUB_OFFLINE",
+                                "value": "1"
+                            },
+                            {
+                                "name": "VLLM_NO_USAGE_STATS",
+                                "value": "1"
+                            },
+                            {
+                                "name": "DO_NOT_TRACK",
+                                "value": "1"
+                            },
+                            {
+                                "name": "INFERENCE_SERVICE_NAME",
+                                "value": "command-helper"
+                            }
+                        ],
+                        "image": "registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:c056e61672b6aea489ad5dde0bd2f8497230f5333e87f7cf6c494eba3bfdc808",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "kserve-container",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "4",
+                                "memory": "20Gi",
+                                "nvidia.com/gpu": "1"
+                            },
+                            "requests": {
+                                "cpu": "2",
+                                "memory": "12Gi",
+                                "nvidia.com/gpu": "1"
+                            }
+                        },
+                        "securityContext": {
+                            "allowPrivilegeEscalation": false,
+                            "capabilities": {
+                                "drop": [
+                                    "ALL"
+                                ]
+                            },
+                            "runAsNonRoot": true,
+                            "seccompProfile": {
+                                "type": "RuntimeDefault"
+                            }
+                        },
+                        "startupProbe": {
+                            "failureThreshold": 90,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/dev/shm",
+                                "name": "shm"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "no-api-credentials",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/etc/tls/private",
+                                "name": "proxy-tls"
+                            }
+                        ]
+                    },
+                    {
+                        "args": [
+                            "--secure-listen-address=:8443",
+                            "--proxy-endpoints-port=8643",
+                            "--upstream=http://localhost:8080",
+                            "--auth-header-fields-enabled=true",
+                            "--tls-cert-file=/etc/tls/private/tls.crt",
+                            "--tls-private-key-file=/etc/tls/private/tls.key",
+                            "--config-file=/etc/kube-rbac-proxy/config-file.yaml",
+                            "--v=4"
+                        ],
+                        "image": "registry.redhat.io/rhoai/odh-kube-rbac-proxy-rhel9@sha256:b64105d53ab3f7d477652b2f29c90636fe272891cce71620ceadf0bf2eb3e323",
+                        "imagePullPolicy": "IfNotPresent",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/healthz",
+                                "port": 8643,
+                                "scheme": "HTTPS"
+                            },
+                            "initialDelaySeconds": 30,
+                            "periodSeconds": 5,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "name": "kube-rbac-proxy",
+                        "ports": [
+                            {
+                                "containerPort": 8443,
+                                "name": "https",
+                                "protocol": "TCP"
+                            },
+                            {
+                                "containerPort": 8643,
+                                "name": "proxy",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/healthz",
+                                "port": 8643,
+                                "scheme": "HTTPS"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 5,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "200m",
+                                "memory": "128Mi"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "memory": "64Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/etc/tls/private",
+                                "name": "proxy-tls"
+                            },
+                            {
+                                "mountPath": "/etc/kube-rbac-proxy",
+                                "name": "kube-rbac-proxy-sar-config",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "nodeSelector": {
+                    "kubernetes.io/hostname": "gpu-node-01"
+                },
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {
+                    "fsGroup": 1000880000,
+                    "fsGroupChangePolicy": "OnRootMismatch",
+                    "runAsNonRoot": true
+                },
+                "serviceAccount": "model-server",
+                "serviceAccountName": "model-server",
+                "terminationGracePeriodSeconds": 30,
+                "volumes": [
+                    {
+                        "emptyDir": {
+                            "medium": "Memory",
+                            "sizeLimit": "1Gi"
+                        },
+                        "name": "shm"
+                    },
+                    {
+                        "emptyDir": {},
+                        "name": "no-api-credentials"
+                    },
+                    {
+                        "name": "proxy-tls",
+                        "secret": {
+                            "defaultMode": 420,
+                            "secretName": "command-helper-predictor-serving-cert"
+                        }
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "command-helper-kube-rbac-proxy-sar-config"
+                        },
+                        "name": "kube-rbac-proxy-sar-config"
+                    }
+                ]
+            }
+        }
+    },
+    "status": {
+        "availableReplicas": 1,
+        "conditions": [
+            {
+                "lastTransitionTime": "2026-09-22T17:14:00Z",
+                "lastUpdateTime": "2026-09-22T17:14:00Z",
+                "message": "Deployment has minimum availability.",
+                "reason": "MinimumReplicasAvailable",
+                "status": "True",
+                "type": "Available"
+            },
+            {
+                "lastTransitionTime": "2026-09-22T16:59:02Z",
+                "lastUpdateTime": "2026-09-22T17:14:00Z",
+                "message": "ReplicaSet \"command-helper-predictor-6fd4467797\" has successfully progressed.",
+                "reason": "NewReplicaSetAvailable",
+                "status": "True",
+                "type": "Progressing"
+            }
+        ],
+        "observedGeneration": 4,
+        "readyReplicas": 1,
+        "replicas": 1,
+        "terminatingReplicas": 0,
+        "updatedReplicas": 1
+    }
+}

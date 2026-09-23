@@ -1,0 +1,19 @@
+# TEMPLATE ONLY: replace every REPLACE_* value before applying.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: intro-openshift-ai
+  namespace: REPLACE_ARGOCD_NAMESPACE
+spec:
+  project: REPLACE_APPROVED_ARGOCD_PROJECT
+  source:
+    repoURL: REPLACE_GIT_REPOSITORY_URL
+    targetRevision: REPLACE_REVIEWED_COMMIT_SHA
+    path: REPLACE_REPOSITORY_RELATIVE_PATH_TO_LAB_OVERLAY
+  destination:
+    server: REPLACE_REGISTERED_DESTINATION_API_URL
+    namespace: intro-openshift-ai
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=false
+# No automated sync and no cascading-deletion finalizer in this starter example.

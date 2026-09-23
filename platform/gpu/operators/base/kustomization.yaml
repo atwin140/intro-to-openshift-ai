@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - 00-namespace.json
+  - 01-operatorgroup.json
+  - 02-subscription.json
+  - 03-namespace.json
+  - 04-operatorgroup.json
+  - 05-subscription.json

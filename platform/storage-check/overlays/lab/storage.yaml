@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: storage-handoff-check
+  namespace: intro-openshift-ai
+spec:
+  storageClassName: synology-iscsi-storage

@@ -1,0 +1,159 @@
+apiVersion: v1
+automountServiceAccountToken: false
+kind: ServiceAccount
+metadata:
+  name: model-server
+  namespace: intro-openshift-ai
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: model-cache
+  namespace: intro-openshift-ai
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: synology-iscsi-storage
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: model-ingress
+  namespace: intro-openshift-ai
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          intro-ai-model-client: "true"
+    ports:
+    - port: 8080
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      serving.kserve.io/inferenceservice: command-helper
+  policyTypes:
+  - Ingress
+---
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  annotations:
+    opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
+    opendatahub.io/runtime-version: v0.24.0
+    openshift.io/display-name: Lab vLLM — Qwen3 4B
+  labels:
+    opendatahub.io/dashboard: "true"
+  name: lab-vllm
+  namespace: intro-openshift-ai
+spec:
+  annotations:
+    opendatahub.io/kserve-runtime: vllm
+    prometheus.io/path: /metrics
+    prometheus.io/port: "8080"
+  containers:
+  - args:
+    - --port=8080
+    - --model=/mnt/models
+    - --served-model-name={{.Name}}
+    - --dtype=bfloat16
+    - --max-model-len=4096
+    - --max-num-seqs=2
+    - --max-num-batched-tokens=4096
+    - --gpu-memory-utilization=0.90
+    - --enforce-eager
+    - --generation-config=vllm
+    - --override-generation-config={"max_new_tokens":768}
+    command:
+    - python
+    - -m
+    - vllm.entrypoints.openai.api_server
+    env:
+    - name: HF_HOME
+      value: /tmp/hf_home
+    - name: HF_HUB_OFFLINE
+      value: "1"
+    - name: VLLM_NO_USAGE_STATS
+      value: "1"
+    - name: DO_NOT_TRACK
+      value: "1"
+    image: registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:c056e61672b6aea489ad5dde0bd2f8497230f5333e87f7cf6c494eba3bfdc808
+    name: kserve-container
+    ports:
+    - containerPort: 8080
+      protocol: TCP
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /health
+        port: 8080
+      periodSeconds: 10
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+    startupProbe:
+      failureThreshold: 90
+      httpGet:
+        path: /health
+        port: 8080
+      periodSeconds: 10
+    volumeMounts:
+    - mountPath: /dev/shm
+      name: shm
+  multiModel: false
+  supportedModelFormats:
+  - autoSelect: true
+    name: vLLM
+---
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  annotations:
+    openshift.io/display-name: Command helper — Qwen3 4B
+    serving.kserve.io/autoscalerClass: external
+    serving.kserve.io/deploymentMode: RawDeployment
+  labels:
+    opendatahub.io/dashboard: "true"
+  name: command-helper
+  namespace: intro-openshift-ai
+spec:
+  predictor:
+    automountServiceAccountToken: false
+    deploymentStrategy:
+      type: Recreate
+    maxReplicas: 1
+    minReplicas: 1
+    model:
+      modelFormat:
+        name: vLLM
+      resources:
+        limits:
+          cpu: "4"
+          memory: 20Gi
+          nvidia.com/gpu: "1"
+        requests:
+          cpu: "2"
+          memory: 12Gi
+          nvidia.com/gpu: "1"
+      runtime: lab-vllm
+      storageUri: pvc://model-cache/qwen3-4b
+    nodeSelector:
+      kubernetes.io/hostname: gpu-node-01
+    securityContext:
+      fsGroup: 1000880000
+      fsGroupChangePolicy: OnRootMismatch
+      runAsNonRoot: true
+    serviceAccountName: model-server
+    volumes:
+    - emptyDir:
+        medium: Memory
+        sizeLimit: 1Gi
+      name: shm

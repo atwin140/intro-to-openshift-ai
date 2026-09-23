@@ -1,0 +1,74 @@
+{
+  "apiVersion": "serving.kserve.io/v1beta1",
+  "kind": "InferenceService",
+  "metadata": {
+    "name": "image-generator",
+    "labels": {
+      "opendatahub.io/dashboard": "true",
+      "networking.kserve.io/visibility": "exposed"
+    },
+    "annotations": {
+      "serving.kserve.io/deploymentMode": "Standard",
+      "serving.kserve.io/autoscalerClass": "external",
+      "openshift.io/display-name": "Image generator \u2014 Stable Diffusion 1.5",
+      "security.opendatahub.io/enable-auth": "true"
+    }
+  },
+  "spec": {
+    "predictor": {
+      "serviceAccountName": "image-generator",
+      "automountServiceAccountToken": false,
+      "minReplicas": 1,
+      "maxReplicas": 1,
+      "deploymentStrategy": {
+        "type": "Recreate"
+      },
+      "securityContext": {
+        "runAsNonRoot": true,
+        "fsGroup": 1000000000,
+        "fsGroupChangePolicy": "OnRootMismatch"
+      },
+      "model": {
+        "modelFormat": {
+          "name": "diffusers"
+        },
+        "runtime": "lab-diffusers",
+        "storageUri": "pvc://image-model-cache/sd15",
+        "resources": {
+          "requests": {
+            "cpu": "2",
+            "memory": "8Gi",
+            "nvidia.com/gpu": "1"
+          },
+          "limits": {
+            "cpu": "4",
+            "memory": "16Gi",
+            "nvidia.com/gpu": "1"
+          }
+        }
+      },
+      "volumes": [
+        {
+          "name": "shm",
+          "emptyDir": {
+            "medium": "Memory",
+            "sizeLimit": "1Gi"
+          }
+        },
+        {
+          "name": "no-api-credentials",
+          "emptyDir": {}
+        },
+        {
+          "name": "image-app",
+          "configMap": {
+            "name": "image-generator-code"
+          }
+        }
+      ],
+      "nodeSelector": {
+        "kubernetes.io/hostname": "gpu-worker-02"
+      }
+    }
+  }
+}

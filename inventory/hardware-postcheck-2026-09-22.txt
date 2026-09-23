@@ -1,0 +1,43 @@
+2026-09-22T13:37:57Z
+No resources found
+NAME          STATUS   ROLES    AGE     VERSION
+gpu-node-01   Ready    worker   2d14h   v1.35.6
+gpu-node-02   Ready    worker   2d14h   v1.35.6
+NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
+authentication                             4.22.13   True        False         False      2d5h    
+baremetal                                  4.22.13   True        False         False      4d14h   
+cloud-controller-manager                   4.22.13   True        False         False      4d15h   
+cloud-credential                           4.22.13   True        False         False      4d15h   
+cluster-autoscaler                         4.22.13   True        False         False      4d14h   
+config-operator                            4.22.13   True        False         False      4d14h   
+console                                    4.22.13   True        False         False      4d13h   
+control-plane-machine-set                  4.22.13   True        False         False      4d14h   
+csi-snapshot-controller                    4.22.13   True        False         False      4d14h   
+dns                                        4.22.13   True        False         False      4d14h   
+etcd                                       4.22.13   True        False         False      4d14h   
+image-registry                             4.22.13   True        False         False      4d14h   
+ingress                                    4.22.13   True        False         False      2d      
+insights                                   4.22.13   True        False         False      4d14h   
+kube-apiserver                             4.22.13   True        False         False      4d14h   
+kube-controller-manager                    4.22.13   True        False         False      4d14h   
+kube-scheduler                             4.22.13   True        False         False      4d14h   
+kube-storage-version-migrator              4.22.13   True        False         False      4d14h   
+machine-api                                4.22.13   True        False         False      4d14h   
+machine-approver                           4.22.13   True        False         False      4d14h   
+machine-config                             4.22.13   True        False         False      4d14h   
+marketplace                                4.22.13   True        False         False      4d14h   
+monitoring                                 4.22.13   True        False         False      4d14h   
+network                                    4.22.13   True        False         False      4d14h   
+node-tuning                                4.22.13   True        False         False      2d      
+olm                                        4.22.13   True        False         False      4d14h   
+openshift-apiserver                        4.22.13   True        False         False      4d14h   
+openshift-controller-manager               4.22.13   True        False         False      4d14h   
+openshift-samples                          4.22.13   True        False         False      4d14h   
+operator-lifecycle-manager                 4.22.13   True        False         False      4d14h   
+operator-lifecycle-manager-catalog         4.22.13   True        False         False      4d14h   
+operator-lifecycle-manager-packageserver   4.22.13   True        False         False      2d      
+service-ca                                 4.22.13   True        False         False      4d14h   
+storage                                    4.22.13   True        False         False      4d14h   
+NAME     CONFIG                                             UPDATED   UPDATING   DEGRADED   MACHINECOUNT   READYMACHINECOUNT   UPDATEDMACHINECOUNT   DEGRADEDMACHINECOUNT   AGE
+master   rendered-master-d38da848f31b1e8a831b4cee46e4cdc3   True      False      False      3              3                   3                     0                      4d14h
+worker   rendered-worker-aba9c5bc8b7db92b2d8523ea08fcc159   True      False      False      2              2                   2                     0                      4d14h

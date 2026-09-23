@@ -1,0 +1,170 @@
+{
+    "apiVersion": "batch/v1",
+    "kind": "Job",
+    "metadata": {
+        "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"batch/v1\",\"kind\":\"Job\",\"metadata\":{\"annotations\":{},\"name\":\"download-qwen3-4b\",\"namespace\":\"intro-openshift-ai\"},\"spec\":{\"activeDeadlineSeconds\":3600,\"backoffLimit\":0,\"template\":{\"metadata\":{\"labels\":{\"app\":\"model-download\"}},\"spec\":{\"automountServiceAccountToken\":false,\"containers\":[{\"command\":[\"python\",\"/scripts/download.py\"],\"env\":[{\"name\":\"HF_HOME\",\"value\":\"/tmp/hf-home\"},{\"name\":\"HF_HUB_DISABLE_IMPLICIT_TOKEN\",\"value\":\"1\"},{\"name\":\"HF_HUB_OFFLINE\",\"value\":\"0\"},{\"name\":\"TRANSFORMERS_OFFLINE\",\"value\":\"0\"}],\"image\":\"registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:c056e61672b6aea489ad5dde0bd2f8497230f5333e87f7cf6c494eba3bfdc808\",\"name\":\"download\",\"resources\":{\"limits\":{\"cpu\":\"2\",\"memory\":\"4Gi\"},\"requests\":{\"cpu\":\"1\",\"memory\":\"2Gi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"runAsNonRoot\":true,\"seccompProfile\":{\"type\":\"RuntimeDefault\"}},\"volumeMounts\":[{\"mountPath\":\"/models\",\"name\":\"models\"},{\"mountPath\":\"/scripts\",\"name\":\"script\",\"readOnly\":true}]}],\"nodeSelector\":{\"kubernetes.io/hostname\":\"gpu-node-01\"},\"restartPolicy\":\"Never\",\"securityContext\":{\"fsGroup\":1000880000,\"fsGroupChangePolicy\":\"OnRootMismatch\",\"runAsNonRoot\":true},\"serviceAccountName\":\"model-server\",\"volumes\":[{\"name\":\"models\",\"persistentVolumeClaim\":{\"claimName\":\"model-cache\"}},{\"configMap\":{\"name\":\"model-download-script-cg6b982m8b\"},\"name\":\"script\"}]}}}}\n"
+        },
+        "creationTimestamp": "2026-09-22T16:56:48Z",
+        "generation": 1,
+        "labels": {
+            "app": "model-download",
+            "batch.kubernetes.io/controller-uid": "14b603ba-3ea2-48b8-a36e-6aa75e2421ee",
+            "batch.kubernetes.io/job-name": "download-qwen3-4b",
+            "controller-uid": "14b603ba-3ea2-48b8-a36e-6aa75e2421ee",
+            "job-name": "download-qwen3-4b"
+        },
+        "name": "download-qwen3-4b",
+        "namespace": "intro-openshift-ai",
+        "resourceVersion": "2855357",
+        "uid": "14b603ba-3ea2-48b8-a36e-6aa75e2421ee"
+    },
+    "spec": {
+        "activeDeadlineSeconds": 3600,
+        "backoffLimit": 0,
+        "completionMode": "NonIndexed",
+        "completions": 1,
+        "manualSelector": false,
+        "parallelism": 1,
+        "podReplacementPolicy": "TerminatingOrFailed",
+        "selector": {
+            "matchLabels": {
+                "batch.kubernetes.io/controller-uid": "14b603ba-3ea2-48b8-a36e-6aa75e2421ee"
+            }
+        },
+        "suspend": false,
+        "template": {
+            "metadata": {
+                "labels": {
+                    "app": "model-download",
+                    "batch.kubernetes.io/controller-uid": "14b603ba-3ea2-48b8-a36e-6aa75e2421ee",
+                    "batch.kubernetes.io/job-name": "download-qwen3-4b",
+                    "controller-uid": "14b603ba-3ea2-48b8-a36e-6aa75e2421ee",
+                    "job-name": "download-qwen3-4b"
+                }
+            },
+            "spec": {
+                "automountServiceAccountToken": false,
+                "containers": [
+                    {
+                        "command": [
+                            "python",
+                            "/scripts/download.py"
+                        ],
+                        "env": [
+                            {
+                                "name": "HF_HOME",
+                                "value": "/tmp/hf-home"
+                            },
+                            {
+                                "name": "HF_HUB_DISABLE_IMPLICIT_TOKEN",
+                                "value": "1"
+                            },
+                            {
+                                "name": "HF_HUB_OFFLINE",
+                                "value": "0"
+                            },
+                            {
+                                "name": "TRANSFORMERS_OFFLINE",
+                                "value": "0"
+                            }
+                        ],
+                        "image": "registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:c056e61672b6aea489ad5dde0bd2f8497230f5333e87f7cf6c494eba3bfdc808",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "download",
+                        "resources": {
+                            "limits": {
+                                "cpu": "2",
+                                "memory": "4Gi"
+                            },
+                            "requests": {
+                                "cpu": "1",
+                                "memory": "2Gi"
+                            }
+                        },
+                        "securityContext": {
+                            "allowPrivilegeEscalation": false,
+                            "capabilities": {
+                                "drop": [
+                                    "ALL"
+                                ]
+                            },
+                            "runAsNonRoot": true,
+                            "seccompProfile": {
+                                "type": "RuntimeDefault"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/models",
+                                "name": "models"
+                            },
+                            {
+                                "mountPath": "/scripts",
+                                "name": "script",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "nodeSelector": {
+                    "kubernetes.io/hostname": "gpu-node-01"
+                },
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {
+                    "fsGroup": 1000880000,
+                    "fsGroupChangePolicy": "OnRootMismatch",
+                    "runAsNonRoot": true
+                },
+                "serviceAccount": "model-server",
+                "serviceAccountName": "model-server",
+                "terminationGracePeriodSeconds": 30,
+                "volumes": [
+                    {
+                        "name": "models",
+                        "persistentVolumeClaim": {
+                            "claimName": "model-cache"
+                        }
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "model-download-script-cg6b982m8b"
+                        },
+                        "name": "script"
+                    }
+                ]
+            }
+        }
+    },
+    "status": {
+        "completionTime": "2026-09-22T16:58:53Z",
+        "conditions": [
+            {
+                "lastProbeTime": "2026-09-22T16:58:53Z",
+                "lastTransitionTime": "2026-09-22T16:58:53Z",
+                "message": "Reached expected number of succeeded pods",
+                "reason": "CompletionsReached",
+                "status": "True",
+                "type": "SuccessCriteriaMet"
+            },
+            {
+                "lastProbeTime": "2026-09-22T16:58:53Z",
+                "lastTransitionTime": "2026-09-22T16:58:53Z",
+                "message": "Reached expected number of succeeded pods",
+                "reason": "CompletionsReached",
+                "status": "True",
+                "type": "Complete"
+            }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-22T16:56:48Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+    }
+}

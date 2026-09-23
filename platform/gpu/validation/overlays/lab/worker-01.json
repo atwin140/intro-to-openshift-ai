@@ -1,0 +1,17 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "cuda-vectoradd-01",
+    "namespace": "intro-ai-gpu-checks"
+  },
+  "spec": {
+    "template": {
+      "spec": {
+        "nodeSelector": {
+          "kubernetes.io/hostname": "gpu-worker-01"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "pod": "command-helper-predictor-6fd4467797-6n7wg",
+  "samples": [
+    {
+      "time": 1790097367.554506,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 0
+    },
+    {
+      "time": 1790097368.7243369,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 0
+    },
+    {
+      "time": 1790097369.977536,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 100
+    },
+    {
+      "time": 1790097371.158078,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 100
+    },
+    {
+      "time": 1790097372.346525,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 100
+    },
+    {
+      "time": 1790097373.548162,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 100
+    },
+    {
+      "time": 1790097374.733539,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 100
+    },
+    {
+      "time": 1790097375.909765,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 0
+    },
+    {
+      "time": 1790097377.072298,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 0
+    }
+  ],
+  "errors": []
+}

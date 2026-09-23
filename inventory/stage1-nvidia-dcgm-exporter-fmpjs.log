@@ -1,0 +1,30 @@
+time=2026-09-22T14:38:57.564Z level=INFO msg="Starting dcgm-exporter" Version=4.6.0-4.8.3
+time=2026-09-22T14:38:57.565Z level=INFO msg="Attempting to connect to remote hostengine at nvidia-dcgm:5555"
+time=2026-09-22T14:38:57.568Z level=INFO msg="Initialized DCGM Fields module."
+time=2026-09-22T14:38:57.568Z level=INFO msg="Attempting to initialize NVML library."
+time=2026-09-22T14:38:57.572Z level=INFO msg="NVML provider successfully initialized for Kubernetes MIG support"
+time=2026-09-22T14:38:57.572Z level=INFO msg="DCGM successfully initialized!"
+time=2026-09-22T14:38:57.631Z level=INFO msg="Not collecting DCP metrics: Profiling is not supported for this group of GPUs or GPU"
+time=2026-09-22T14:38:57.631Z level=INFO msg="Building registry for current GPU topology"
+time=2026-09-22T14:38:57.631Z level=INFO msg="Using metric file '/etc/dcgm-exporter/dcp-metrics-included.csv'"
+time=2026-09-22T14:38:57.632Z level=WARN msg="Skipping line 21 ('DCGM_FI_PROF_GR_ENGINE_ACTIVE'): metric not enabled"
+time=2026-09-22T14:38:57.632Z level=WARN msg="Skipping line 22 ('DCGM_FI_PROF_PIPE_TENSOR_ACTIVE'): metric not enabled"
+time=2026-09-22T14:38:57.632Z level=WARN msg="Skipping line 23 ('DCGM_FI_PROF_DRAM_ACTIVE'): metric not enabled"
+time=2026-09-22T14:38:57.632Z level=WARN msg="Skipping line 24 ('DCGM_FI_PROF_PCIE_TX_BYTES'): metric not enabled"
+time=2026-09-22T14:38:57.632Z level=WARN msg="Skipping line 25 ('DCGM_FI_PROF_PCIE_RX_BYTES'): metric not enabled"
+time=2026-09-22T14:38:57.632Z level=INFO msg="Initializing system entities of type 'GPU'"
+time=2026-09-22T14:38:57.659Z level=INFO msg="Initializing system entities of type 'NvSwitch'"
+time=2026-09-22T14:38:57.659Z level=INFO msg="Not collecting NvSwitch metrics; no switches to monitor"
+time=2026-09-22T14:38:57.659Z level=INFO msg="Initializing system entities of type 'NvLink'"
+time=2026-09-22T14:38:57.659Z level=WARN msg="Failed to initialize NvSwitch/NvLink info" error="no switches to monitor"
+time=2026-09-22T14:38:57.663Z level=INFO msg="Initializing system entities of type 'CPU'"
+time=2026-09-22T14:38:57.777Z level=INFO msg="Not collecting CPU metrics; error retrieving DCGM CPU hierarchy v2: This request is serviced by a module of DCGM that is not currently loaded"
+time=2026-09-22T14:38:57.777Z level=INFO msg="Initializing system entities of type 'CPU Core'"
+time=2026-09-22T14:38:57.778Z level=INFO msg="Not collecting CPU Core metrics; error retrieving DCGM CPU hierarchy v2: This request is serviced by a module of DCGM that is not currently loaded"
+time=2026-09-22T14:38:57.785Z level=INFO msg="Registry built successfully" collector_count=1
+time=2026-09-22T14:38:57.785Z level=INFO msg="Kubernetes metrics collection enabled!"
+time=2026-09-22T14:38:57.785Z level=INFO msg="HTTP server started - ready to serve metrics"
+time=2026-09-22T14:38:57.785Z level=INFO msg="Watching for changes in file" file=/etc/dcgm-exporter/dcp-metrics-included.csv debounce=200ms
+time=2026-09-22T14:38:57.785Z level=INFO msg="Starting webserver"
+time=2026-09-22T14:38:57.785Z level=INFO msg="Listening on" address=[::]:9400
+time=2026-09-22T14:38:57.785Z level=INFO msg="TLS is disabled." http2=false address=[::]:9400

@@ -1,0 +1,223 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "annotations": {
+            "k8s.ovn.org/pod-networks": "{\"default\":{\"ip_addresses\":[\"10.128.2.26/23\"],\"mac_address\":\"0a:58:0a:80:02:1a\",\"gateway_ips\":[\"10.128.2.1\"],\"routes\":[{\"dest\":\"10.128.0.0/14\",\"nextHop\":\"10.128.2.1\"},{\"dest\":\"172.30.0.0/16\",\"nextHop\":\"10.128.2.1\"},{\"dest\":\"169.254.0.5/32\",\"nextHop\":\"10.128.2.1\"},{\"dest\":\"100.64.0.0/16\",\"nextHop\":\"10.128.2.1\"}],\"ip_address\":\"10.128.2.26/23\",\"gateway_ip\":\"10.128.2.1\",\"role\":\"primary\"}}",
+            "k8s.v1.cni.cncf.io/network-status": "[{\n    \"name\": \"ovn-kubernetes\",\n    \"interface\": \"eth0\",\n    \"ips\": [\n        \"10.128.2.26\"\n    ],\n    \"mac\": \"0a:58:0a:80:02:1a\",\n    \"default\": true,\n    \"dns\": {}\n}]",
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{},\"name\":\"storage-check-read\",\"namespace\":\"intro-openshift-ai\"},\"spec\":{\"activeDeadlineSeconds\":300,\"automountServiceAccountToken\":false,\"containers\":[{\"command\":[\"/bin/bash\",\"-c\",\"set -eu; test \\\"$(cat /data/check.txt)\\\" = intro-ai-storage-check; printf \\\"second-worker\\\\n\\\" \\u003e\\u003e /data/check.txt; sync; test \\\"$(tail -n 1 /data/check.txt)\\\" = second-worker; echo READ-AND-WRITE-PASSED\"],\"image\":\"quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:392e9833715141f9fc2f4dbe6f622a950755fd2ae5e78fd31c78f558ea3e74b5\",\"name\":\"check\",\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"128Mi\"},\"requests\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]}},\"volumeMounts\":[{\"mountPath\":\"/data\",\"name\":\"data\"}]}],\"nodeSelector\":{\"kubernetes.io/hostname\":\"gpu-node-02\"},\"restartPolicy\":\"Never\",\"securityContext\":{\"fsGroup\":1000880000,\"fsGroupChangePolicy\":\"OnRootMismatch\",\"runAsNonRoot\":true,\"seccompProfile\":{\"type\":\"RuntimeDefault\"}},\"volumes\":[{\"name\":\"data\",\"persistentVolumeClaim\":{\"claimName\":\"storage-handoff-check\"}}]}}\n",
+            "openshift.io/scc": "openshift-ai-inferenceservice-image-volume-scc",
+            "seccomp.security.alpha.kubernetes.io/pod": "runtime/default",
+            "security.openshift.io/validated-scc-subject-type": "user"
+        },
+        "creationTimestamp": "2026-09-22T15:36:26Z",
+        "generation": 1,
+        "name": "storage-check-read",
+        "namespace": "intro-openshift-ai",
+        "resourceVersion": "2794167",
+        "uid": "98cf6d4f-3eb2-4c9b-885a-b9215d945270"
+    },
+    "spec": {
+        "activeDeadlineSeconds": 300,
+        "automountServiceAccountToken": false,
+        "containers": [
+            {
+                "command": [
+                    "/bin/bash",
+                    "-c",
+                    "set -eu; test \"$(cat /data/check.txt)\" = intro-ai-storage-check; printf \"second-worker\\n\" \u003e\u003e /data/check.txt; sync; test \"$(tail -n 1 /data/check.txt)\" = second-worker; echo READ-AND-WRITE-PASSED"
+                ],
+                "image": "quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:392e9833715141f9fc2f4dbe6f622a950755fd2ae5e78fd31c78f558ea3e74b5",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "check",
+                "resources": {
+                    "limits": {
+                        "cpu": "500m",
+                        "memory": "128Mi"
+                    },
+                    "requests": {
+                        "cpu": "50m",
+                        "memory": "64Mi"
+                    }
+                },
+                "securityContext": {
+                    "allowPrivilegeEscalation": false,
+                    "capabilities": {
+                        "drop": [
+                            "ALL"
+                        ]
+                    },
+                    "runAsUser": 1000880000
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/data",
+                        "name": "data"
+                    }
+                ]
+            }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "gpu-node-02",
+        "nodeSelector": {
+            "kubernetes.io/hostname": "gpu-node-02"
+        },
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {
+            "fsGroup": 1000880000,
+            "fsGroupChangePolicy": "OnRootMismatch",
+            "runAsNonRoot": true,
+            "seLinuxOptions": {
+                "level": "s0:c30,c5"
+            },
+            "seccompProfile": {
+                "type": "RuntimeDefault"
+            }
+        },
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/not-ready",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/unreachable",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "NoSchedule",
+                "key": "node.kubernetes.io/memory-pressure",
+                "operator": "Exists"
+            }
+        ],
+        "volumes": [
+            {
+                "name": "data",
+                "persistentVolumeClaim": {
+                    "claimName": "storage-handoff-check"
+                }
+            }
+        ]
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-22T15:36:45Z",
+                "observedGeneration": 1,
+                "status": "False",
+                "type": "PodReadyToStartContainers"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-22T15:36:26Z",
+                "observedGeneration": 1,
+                "reason": "PodCompleted",
+                "status": "True",
+                "type": "Initialized"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-22T15:36:26Z",
+                "observedGeneration": 1,
+                "reason": "PodCompleted",
+                "status": "False",
+                "type": "Ready"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-22T15:36:26Z",
+                "observedGeneration": 1,
+                "reason": "PodCompleted",
+                "status": "False",
+                "type": "ContainersReady"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-22T15:36:26Z",
+                "observedGeneration": 1,
+                "status": "True",
+                "type": "PodScheduled"
+            }
+        ],
+        "containerStatuses": [
+            {
+                "allocatedResources": {
+                    "cpu": "50m",
+                    "memory": "64Mi"
+                },
+                "containerID": "cri-o://bce915789da83d041769ad57af65db995ef7dec10243d39f32340cfa501921da",
+                "image": "quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:392e9833715141f9fc2f4dbe6f622a950755fd2ae5e78fd31c78f558ea3e74b5",
+                "imageID": "quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:392e9833715141f9fc2f4dbe6f622a950755fd2ae5e78fd31c78f558ea3e74b5",
+                "lastState": {},
+                "name": "check",
+                "ready": false,
+                "resources": {
+                    "limits": {
+                        "cpu": "500m",
+                        "memory": "128Mi"
+                    },
+                    "requests": {
+                        "cpu": "50m",
+                        "memory": "64Mi"
+                    }
+                },
+                "restartCount": 0,
+                "started": false,
+                "state": {
+                    "terminated": {
+                        "containerID": "cri-o://bce915789da83d041769ad57af65db995ef7dec10243d39f32340cfa501921da",
+                        "exitCode": 0,
+                        "finishedAt": "2026-09-22T15:36:43Z",
+                        "reason": "Completed",
+                        "startedAt": "2026-09-22T15:36:43Z"
+                    }
+                },
+                "user": {
+                    "linux": {
+                        "gid": 0,
+                        "supplementalGroups": [
+                            0,
+                            1000880000
+                        ],
+                        "uid": 1000880000
+                    }
+                },
+                "volumeMounts": [
+                    {
+                        "mountPath": "/data",
+                        "name": "data"
+                    }
+                ]
+            }
+        ],
+        "hostIP": "10.0.15.150",
+        "hostIPs": [
+            {
+                "ip": "10.0.15.150"
+            }
+        ],
+        "observedGeneration": 1,
+        "phase": "Succeeded",
+        "podIP": "10.128.2.26",
+        "podIPs": [
+            {
+                "ip": "10.128.2.26"
+            }
+        ],
+        "qosClass": "Burstable",
+        "startTime": "2026-09-22T15:36:26Z"
+    }
+}

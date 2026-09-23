@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: intro-ai-gpu-checks
+---
+apiVersion: v1
+automountServiceAccountToken: false
+kind: ServiceAccount
+metadata:
+  name: gpu-check
+  namespace: intro-ai-gpu-checks
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cuda-vectoradd-01
+  namespace: intro-ai-gpu-checks
+spec:
+  activeDeadlineSeconds: 300
+  backoffLimit: 0
+  template:
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - image: nvcr.io/nvidia/k8s/cuda-sample@sha256:86c8ab90b657bc74098f068e670d2635799f1fd3695a0dd55fd696d8f9e3d64b
+        name: vectoradd
+        resources:
+          limits:
+            cpu: "1"
+            memory: 256Mi
+            nvidia.com/gpu: 1
+          requests:
+            cpu: 100m
+            memory: 128Mi
+            nvidia.com/gpu: 1
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      nodeSelector:
+        kubernetes.io/hostname: gpu-node-01
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: gpu-check
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cuda-vectoradd-02
+  namespace: intro-ai-gpu-checks
+spec:
+  activeDeadlineSeconds: 300
+  backoffLimit: 0
+  template:
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - image: nvcr.io/nvidia/k8s/cuda-sample@sha256:86c8ab90b657bc74098f068e670d2635799f1fd3695a0dd55fd696d8f9e3d64b
+        name: vectoradd
+        resources:
+          limits:
+            cpu: "1"
+            memory: 256Mi
+            nvidia.com/gpu: 1
+          requests:
+            cpu: 100m
+            memory: 128Mi
+            nvidia.com/gpu: 1
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      nodeSelector:
+        kubernetes.io/hostname: gpu-node-02
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: gpu-check

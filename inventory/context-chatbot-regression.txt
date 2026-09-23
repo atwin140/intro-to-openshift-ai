@@ -1,0 +1,41 @@
+Reviewed eviction reference: PASS
+Input role, origin, and length checks: PASS
+Two simultaneous model requests: PASS (no other request marker in answers)
+[
+  {
+    "status": 200,
+    "seconds": 0.41,
+    "body": {
+      "answer": "Kubernetes Services provide a stable network endpoint for a set of Pods, allowing them to be accessed by other services or external users. LAB-ALPHA",
+      "source": "Model-generated \u00b7 review before use",
+      "usage": {
+        "prompt_tokens": 551,
+        "total_tokens": 582,
+        "completion_tokens": 31,
+        "prompt_tokens_details": null
+      },
+      "context_limit": 16384,
+      "trimmed_messages": 0,
+      "seconds": 0.4,
+      "finish_reason": "stop"
+    }
+  },
+  {
+    "status": 200,
+    "seconds": 0.66,
+    "body": {
+      "answer": "Kubernetes Deployments are declarative, self-healing application controllers that manage the deployment and scaling of Pods. LAB-BETA They ensure that a specified number of Pod replicas are running at any given time, automatically replacing failed Pods and scaling the application as needed.",
+      "source": "Model-generated \u00b7 review before use",
+      "usage": {
+        "prompt_tokens": 551,
+        "total_tokens": 604,
+        "completion_tokens": 53,
+        "prompt_tokens_details": null
+      },
+      "context_limit": 16384,
+      "trimmed_messages": 0,
+      "seconds": 0.6,
+      "finish_reason": "stop"
+    }
+  }
+]

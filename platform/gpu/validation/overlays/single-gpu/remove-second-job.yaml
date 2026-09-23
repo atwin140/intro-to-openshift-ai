@@ -1,0 +1,6 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cuda-vectoradd-02
+  namespace: intro-ai-gpu-checks
+$patch: delete

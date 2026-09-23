@@ -1,0 +1,90 @@
+{
+  "pod": "command-helper-predictor-6fd4467797-6n7wg",
+  "samples": [
+    {
+      "time": 1790097376.7010748,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 0
+    },
+    {
+      "time": 1790097377.860414,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 0
+    },
+    {
+      "time": 1790097379.037653,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 0
+    },
+    {
+      "time": 1790097380.2453718,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 100
+    },
+    {
+      "time": 1790097381.416221,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 100
+    },
+    {
+      "time": 1790097382.587727,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 100
+    },
+    {
+      "time": 1790097383.8018649,
+      "total_mib": 12282,
+      "used_mib": 10489,
+      "free_mib": 1387,
+      "gpu_percent": 100
+    },
+    {
+      "time": 1790097384.974417,
+      "total_mib": 12282,
+      "used_mib": 10865,
+      "free_mib": 1011,
+      "gpu_percent": 100
+    },
+    {
+      "time": 1790097386.1497521,
+      "total_mib": 12282,
+      "used_mib": 10865,
+      "free_mib": 1011,
+      "gpu_percent": 100
+    },
+    {
+      "time": 1790097387.331583,
+      "total_mib": 12282,
+      "used_mib": 10865,
+      "free_mib": 1011,
+      "gpu_percent": 100
+    },
+    {
+      "time": 1790097388.4874282,
+      "total_mib": 12282,
+      "used_mib": 10865,
+      "free_mib": 1011,
+      "gpu_percent": 100
+    },
+    {
+      "time": 1790097389.660563,
+      "total_mib": 12282,
+      "used_mib": 10865,
+      "free_mib": 1011,
+      "gpu_percent": 0
+    }
+  ],
+  "errors": []
+}

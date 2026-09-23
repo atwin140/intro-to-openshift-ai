@@ -1,0 +1,45 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "services.platform.opendatahub.io/v1alpha1",
+            "kind": "Auth",
+            "metadata": {
+                "creationTimestamp": "2026-09-19T23:19:08Z",
+                "generation": 1,
+                "name": "auth",
+                "resourceVersion": "1131262",
+                "uid": "cbcfe227-eb3f-4a6e-ad93-f3ac176eaf25"
+            },
+            "spec": {
+                "adminGroups": [
+                    "rhods-admins"
+                ],
+                "allowedGroups": [
+                    "system:authenticated"
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-09-19T23:19:10Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastTransitionTime": "2026-09-19T23:19:10Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "ProvisioningSucceeded"
+                    }
+                ],
+                "observedGeneration": 1,
+                "phase": "Ready"
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}
