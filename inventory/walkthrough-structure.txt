@@ -1,2 +1,0 @@
-Rendered 37 Kustomize roots; checked Python/shell syntax and local guide links.
-PASS: structural checks. This does not prove cluster readiness, inference quality, or fresh-install reproducibility.

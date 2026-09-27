@@ -1,79 +1,0 @@
-INFO:     Started server process [1]
-INFO:     Waiting for application startup.
-Cannot initialize model with low cpu memory usage because `accelerate` was not found in the environment. Defaulting to `low_cpu_mem_usage=False`. It is strongly recommended to install `accelerate` for faster and less memory-intense model loading. You can do so with: 
-```
-pip install accelerate
-```
-.
-Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]
-Loading weights:   0%|          | 0/196 [00:00<?, ?it/s][A
-Loading weights:   8%|▊         | 15/196 [00:00<00:01, 93.43it/s][A
-Loading weights:  14%|█▍        | 28/196 [00:00<00:02, 83.77it/s][A
-Loading weights:  24%|██▍       | 48/196 [00:00<00:01, 109.34it/s][A
-Loading weights:  34%|███▍      | 67/196 [00:00<00:01, 127.67it/s][A
-Loading weights:  41%|████▏     | 81/196 [00:00<00:00, 115.17it/s][A
-Loading weights:  47%|████▋     | 93/196 [00:00<00:00, 106.76it/s][A
-Loading weights:  59%|█████▉    | 116/196 [00:01<00:00, 111.66it/s][A
-Loading weights:  65%|██████▌   | 128/196 [00:01<00:00, 81.17it/s] [A
-Loading weights:  73%|███████▎  | 143/196 [00:01<00:00, 88.17it/s][A
-Loading weights:  92%|█████████▏| 180/196 [00:01<00:00, 144.36it/s][ALoading weights: 100%|██████████| 196/196 [00:01<00:00, 124.31it/s]
-Loading pipeline components...:  14%|█▍        | 1/7 [00:01<00:10,  1.75s/it]Loading pipeline components...:  29%|██▊       | 2/7 [00:03<00:08,  1.74s/it]
-Loading weights:   0%|          | 0/396 [00:00<?, ?it/s][A
-Loading weights:   2%|▏         | 7/396 [00:00<00:08, 44.80it/s][A
-Loading weights:   5%|▌         | 20/396 [00:00<00:06, 59.57it/s][A
-Loading weights:   7%|▋         | 26/396 [00:00<00:08, 42.91it/s][A
-Loading weights:   8%|▊         | 31/396 [00:00<00:09, 37.25it/s][A
-Loading weights:  10%|▉         | 38/396 [00:00<00:08, 42.67it/s][A
-Loading weights:  13%|█▎        | 51/396 [00:01<00:06, 55.58it/s][A
-Loading weights:  14%|█▍        | 57/396 [00:01<00:07, 43.01it/s][A
-Loading weights:  19%|█▉        | 77/396 [00:01<00:04, 70.81it/s][A
-Loading weights:  22%|██▏       | 86/396 [00:01<00:04, 72.71it/s][A
-Loading weights:  25%|██▌       | 100/396 [00:01<00:03, 77.68it/s][A
-Loading weights:  28%|██▊       | 109/396 [00:01<00:04, 70.98it/s][A
-Loading weights:  30%|███       | 120/396 [00:01<00:03, 70.42it/s][A
-Loading weights:  33%|███▎      | 129/396 [00:02<00:04, 57.56it/s][A
-Loading weights:  34%|███▍      | 136/396 [00:02<00:04, 55.67it/s][A
-Loading weights:  36%|███▌      | 142/396 [00:02<00:05, 47.01it/s][A
-Loading weights:  37%|███▋      | 148/396 [00:02<00:06, 40.44it/s][A
-Loading weights:  42%|████▏     | 168/396 [00:02<00:03, 63.04it/s][A
-Loading weights:  44%|████▍     | 175/396 [00:03<00:03, 57.56it/s][A
-Loading weights:  46%|████▌     | 182/396 [00:03<00:04, 44.30it/s][A
-Loading weights:  47%|████▋     | 187/396 [00:03<00:05, 41.08it/s][A
-Loading weights:  49%|████▉     | 195/396 [00:03<00:04, 43.58it/s][A
-Loading weights:  52%|█████▏    | 204/396 [00:03<00:03, 52.35it/s][A
-Loading weights:  56%|█████▌    | 220/396 [00:03<00:02, 70.05it/s][A
-Loading weights:  59%|█████▉    | 235/396 [00:04<00:02, 77.63it/s][A
-Loading weights:  64%|██████▎   | 252/396 [00:04<00:01, 85.87it/s][A
-Loading weights:  70%|███████   | 279/396 [00:04<00:01, 109.54it/s][A
-Loading weights:  73%|███████▎  | 291/396 [00:04<00:01, 99.04it/s] [A
-Loading weights:  76%|███████▌  | 301/396 [00:04<00:01, 88.24it/s][A
-Loading weights:  79%|███████▊  | 311/396 [00:04<00:01, 69.85it/s][A
-Loading weights:  83%|████████▎ | 327/396 [00:05<00:00, 83.75it/s][A
-Loading weights:  85%|████████▌ | 337/396 [00:05<00:00, 74.40it/s][A
-Loading weights:  87%|████████▋ | 346/396 [00:05<00:00, 69.35it/s][A
-Loading weights:  90%|█████████ | 358/396 [00:05<00:00, 69.41it/s][A
-Loading weights:  92%|█████████▏| 366/396 [00:05<00:00, 49.78it/s][ALoading weights: 100%|██████████| 396/396 [00:05<00:00, 66.74it/s]
-Loading pipeline components...:  57%|█████▋    | 4/7 [00:09<00:07,  2.55s/it]Loading pipeline components...:  71%|███████▏  | 5/7 [00:17<00:08,  4.08s/it]Loading pipeline components...: 100%|██████████| 7/7 [00:17<00:00,  2.44s/it]
-/opt/app-root/lib64/python3.12/site-packages/diffusers/pipelines/pipeline_utils.py:2273: FutureWarning: `enable_vae_slicing` is deprecated and will be removed in version 0.40.0. Calling `enable_vae_slicing()` on a `StableDiffusionPipeline` is deprecated and this method will be removed in a future version. Please use `pipe.vae.enable_slicing()`.
-  deprecate(
-INFO:     Application startup complete.
-INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-INFO:     10.128.2.2:40542 - "GET /health HTTP/1.1" 200 OK
-INFO:     10.128.2.2:40550 - "GET /health HTTP/1.1" 200 OK
-INFO:     10.129.0.2:0 - "GET /v1/models HTTP/1.1" 200 OK
-INFO:     10.129.0.2:0 - "POST /v1/images/generations HTTP/1.1" 422 Unprocessable Entity
-INFO:     10.129.0.2:0 - "POST /v1/images/generations HTTP/1.1" 422 Unprocessable Entity
-INFO:     10.129.0.2:0 - "POST /v1/images/generations HTTP/1.1" 422 Unprocessable Entity
-INFO:     10.129.0.2:0 - "POST /v1/images/generations HTTP/1.1" 422 Unprocessable Entity
-INFO:     10.129.0.2:0 - "POST /v1/images/generations HTTP/1.1" 422 Unprocessable Entity
-[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (242 > 77). Running this sequence through the model will result in indexing errors
-INFO:     10.129.0.2:0 - "POST /v1/images/generations HTTP/1.1" 422 Unprocessable Entity
-INFO:     10.129.0.2:0 - "POST /v1/images/generations HTTP/1.1" 413 Request Entity Too Large
-INFO:     10.129.0.2:0 - "POST /v1/images/generations HTTP/1.1" 200 OK
-INFO:     10.129.0.2:0 - "POST /v1/images/generations HTTP/1.1" 429 Too Many Requests
-INFO:     10.129.0.2:0 - "POST /v1/images/generations HTTP/1.1" 200 OK
-INFO:     10.128.2.2:40108 - "GET /health HTTP/1.1" 200 OK
-INFO:     10.128.2.2:59728 - "GET /health HTTP/1.1" 200 OK
-INFO:     10.129.0.2:0 - "POST /v1/images/generations HTTP/1.1" 200 OK
-INFO:     10.128.2.2:42138 - "GET /health HTTP/1.1" 200 OK
-INFO:     10.128.2.2:41026 - "GET /health HTTP/1.1" 200 OK

@@ -1,3 +1,0 @@
-DNS resolved for image-generator-predictor.intro-openshift-ai.svc.cluster.local from the existing unlabeled chatbot pod.
-Direct HTTP port 8080 timed out after 4 seconds.
-Authenticated external HTTPS model access returned 200; anonymous and invalid tokens returned 401.
