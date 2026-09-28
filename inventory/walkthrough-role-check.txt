@@ -1,2 +1,0 @@
-PASS: ai-user has checked project permissions and lacks checked cluster privileges
-Next: apply, inspect, and delete checks/project-access using this same login.

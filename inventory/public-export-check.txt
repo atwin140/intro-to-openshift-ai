@@ -1,1 +1,0 @@
-PASS: 139-file Git-index export, all four checks, no private notes/inventory, exactly one GPU validation Job. No live deployment performed.

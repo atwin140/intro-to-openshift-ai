@@ -1,2 +1,0 @@
-Anonymous model-list request: 503
-CHECK FAILED: Expected authentication rejection; stop and inspect the route.

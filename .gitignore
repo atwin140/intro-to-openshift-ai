@@ -1,0 +1,11 @@
+notes/
+inventory/
+.env
+.env.*
+!.env.example
+*.kubeconfig
+kubeconfig
+secrets/
+*.key
+*.pem
+__pycache__/

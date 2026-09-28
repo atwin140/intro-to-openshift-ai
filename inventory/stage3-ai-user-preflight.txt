@@ -1,8 +1,0 @@
-Administrator preflight using impersonation and recorded groups. Not an actual-login acceptance test.
-create inferenceservices.serving.kserve.io: yes
-create servingruntimes.serving.kserve.io: yes
-create deployments.apps: yes
-create routes.route.openshift.io: yes
-create persistentvolumeclaims: yes
-patch nodes: no
-create clusterrolebindings.rbac.authorization.k8s.io: no
